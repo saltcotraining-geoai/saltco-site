@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sallah Yaya — Resume</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2b6cb0;
+            --accent: #319795;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --gray: #4a5568;
+            --border: #cbd5e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #e2e8f0;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .page {
+            max-width: 850px;
+            margin: 24px auto;
+            background: #ffffff;
+            padding: 48px 56px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            letter-spacing: 0.05em;
+        }
+
+        .header .contact {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: var(--gray);
+        }
+
+        .header .contact span {
+            margin: 0 8px;
+        }
+
+        .header .links {
+            margin-top: 4px;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        /* Section headers */
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        /* Summary */
+        .summary p {
+            font-size: 0.98rem;
+            color: var(--dark);
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 24px;
+            font-size: 0.92rem;
+        }
+
+        .skill-item {
+            display: flex;
+            padding: 2px 0;
+        }
+
+        .skill-item strong {
+            min-width: 130px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Projects */
+        .project {
+            margin-bottom: 14px;
+        }
+
+        .project:last-child {
+            margin-bottom: 0;
+        }
+
+        .project .role {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.98rem;
+        }
+
+        .project .role .org {
+            color: var(--secondary);
+        }
+
+        .project .dates {
+            float: right;
+            font-weight: 400;
+            color: var(--gray);
+            font-size: 0.88rem;
+        }
+
+        .project ul {
+            margin-top: 6px;
+            padding-left: 20px;
+            font-size: 0.92rem;
+        }
+
+        .project ul li {
+            margin-bottom: 3px;
+        }
+
+        /* Experience */
+        .job {
+            margin-bottom: 16px;
+        }
+
+        .job:last-child {
+            margin-bottom: 0;
+        }
+
+        .job .role {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.98rem;
+        }
+
+        .job .role .org {
+            color: var(--secondary);
+        }
+
+        .job .dates {
+            float: right;
+            font-weight: 400;
+            color: var(--gray);
+            font-size: 0.88rem;
+        }
+
+        .job ul {
+            margin-top: 6px;
+            padding-left: 20px;
+            font-size: 0.92rem;
+        }
+
+        .job ul li {
+            margin-bottom: 3px;
+        }
+
+        .job .context {
+            margin-top: 6px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Education & Certs */
+        .edu-item {
+            margin-bottom: 10px;
+        }
+
+        .edu-item .deg {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .edu-item .school {
+            color: var(--gray);
+            font-size: 0.92rem;
+        }
+
+        .edu-item .honors {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .page {
+                box-shadow: none;
+                margin: 0;
+                max-width: none;
+                padding: 24px 32px;
+            }
+
+            .project .dates,
+            .job .dates {
+                float: right;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>SALLAH YAYA</h1>
+        <div class="contact">
+            <span>(763) 688-1669</span>
+            <span>Minneapolis, MN 55443</span>
+            <span>sallah101@gmail.com</span>
+        </div>
+        <div class="links">
+            <span>GitHub: https://github.com/saltcotraining-geoai</span>
+            <span>YouTube: www.youtube.com/@saltcoTraining</span>
+        </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="section">
+        <div class="section-title">Professional Summary</div>
+        <p>Senior GIS Analyst and Surveying Engineer with 18+ years of experience in geospatial
+        technology, from field surveying to enterprise GIS and open-source automation. Founder of a
+        Sudan-based digital independence movement that trains students in open-source geospatial
+        software, and Google AI Fundamentals certified. Combines deep industry expertise — ESRI
+        ArcGIS, QGIS, PostGIS, Python/PyQGIS — with a proven ability to build curricula, teach, and
+        deliver working automation that works offline and on limited infrastructure.</p>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="section">
+        <div class="section-title">Core Competencies</div>
+        <div class="skills-grid">
+            <div class="skill-item"><strong>Geospatial Software</strong>QGIS, ArcGIS Pro, ArcGIS 10.x, ArcGIS Server, ArcSDE</div>
+            <div class="skill-item"><strong>Programming</strong>Python, PyQGIS, GDAL/OGR, SQL, bash, JavaScript</div>
+            <div class="skill-item"><strong>Databases</strong>PostGIS/PostgreSQL, GeoPackage, MBTiles, geodatabases</div>
+            <div class="skill-item"><strong>AI & Automation</strong>Local LLM agents (Ollama), prompt engineering, workflow automation</div>
+            <div class="skill-item"><strong>Field Mapping</strong>QField, KoboToolbox, GPS/Total Station, OpenStreetMap/HOT Mapathons</div>
+            <div class="skill-item"><strong>Analysis</strong>Surface & terrain analysis, hydrologic modeling, image processing, site selection</div>
+            <div class="skill-item"><strong>Education</strong>Curriculum design, train-the-trainer, video instruction, MOOC-style delivery</div>
+            <div class="skill-item"><strong>Other</strong>Linux & open source, AutoCAD, web mapping, report writing</div>
+        </div>
+    </div>
+
+    <!-- PROJECTS & LEADERSHIP -->
+    <div class="section">
+        <div class="section-title">Projects &amp; Leadership</div>
+
+        <div class="project">
+            <span class="role">Founder — <span class="org">Digital Independence: Open-Source Geospatial Education (Sudan)</span></span>
+            <span class="dates">2024 – Present</span>
+            <ul>
+                <li>Founded and lead a movement teaching open-source geospatial skills to students with limited resources, from zero digital literacy to professional-level GIS.</li>
+                <li>Designed a 14-week curriculum (Linux 101 → 10-week beginner track → 4-week advanced automation track) delivered via YouTube tutorials, GitHub repositories, and offline-capable "digital library boxes."</li>
+                <li>Built an automated site-selection pipeline in PyQGIS (object-oriented, dependency-free) that replaces a manual multi-step workflow with a single-click process.</li>
+                <li>Developed a local AI spatial agent using Ollama to generate working PyQGIS and PostGIS code fully offline, protecting data privacy and removing cloud API costs.</li>
+                <li>Engineered an office-to-field pipeline combining PostGIS, QField, and offline MBTiles basemaps for data collection in areas with zero network coverage.</li>
+            </ul>
+        </div>
+
+        <div class="project">
+            <span class="role">Creator — <span class="org">Open-Source GIS Tutorial Library (YouTube + GitHub)</span></span>
+            <span class="dates">2020 – Present</span>
+            <ul>
+                <li>Produce and publish structured video tutorials teaching QGIS, Python automation, and Linux to an international audience, including 10-Week Digital Independence Course.</li>
+                <li>Maintain public repositories with clean documentation, setup scripts, and reproducible workflows so students can rebuild every lesson locally.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div class="section">
+        <div class="section-title">Certifications</div>
+        <div class="edu-item">
+            <span class="deg">Google AI Fundamentals</span>
+            <span class="school"> — Google</span>
+            <span class="honors"> · 2026</span>
+        </div>
+    </div>
+
+    <!-- PROFESSIONAL EXPERIENCE -->
+    <div class="section">
+        <div class="section-title">Professional Experience</div>
+
+        <div class="job">
+            <span class="role">Independent Consultant &amp; Educator — <span class="org">Self-Employed, Minneapolis, MN</span></span>
+            <span class="dates">2017 – Present</span>
+            <ul>
+                <li>Instruct QGIS, GIS, and web mapping to working professionals and students.</li>
+                <li>Build websites and web-mapping applications using JavaScript, HTML, and Python.</li>
+                <li>Develop open-source training materials, automation scripts, and local AI workflows deployed on Linux.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <span class="role">Senior Survey Analyst — <span class="org">Fugro Chance, Inc., Houston, TX</span></span>
+            <span class="dates">2007 – 2016</span>
+            <ul>
+                <li>Administered GIS systems and geospatial databases supporting marine construction surveys.</li>
+                <li>Provided hands-on geodata management support, training, and problem solving across offshore projects.</li>
+                <li>Performed data manipulation, transformation, and data modeling; prepared maps and reports for offshore operations.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <span class="role">GIS Technician — <span class="org">GeoSpatial Services, Winona, MN</span></span>
+            <span class="dates">2005 – 2007</span>
+            <ul>
+                <li>Mapped wetlands and updated the National Wetland Inventory (NWI) database.</li>
+                <li>Improved unit productivity through redesigned trend-analysis and database-management methods.</li>
+                <li>Prepared GIS layers for the Alaska Project using ArcScan and georeferencing; conducted stereoscopic image analysis.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <span class="role">Land Surveyor — <span class="org">Armand Corporation, Cherry Hill, NJ</span></span>
+            <span class="dates">2003 – 2004</span>
+            <ul>
+                <li>Trained personnel on software and Geodimeter total stations; led field teams on the Secaucus Project.</li>
+                <li>Established horizontal and vertical controls; deployed Robotic Total Stations, automatic levels, and GPS receivers.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <span class="role">Project Surveyor — <span class="org">Dar Al-Riyadh Consultants, Riyadh, Saudi Arabia</span></span>
+            <span class="dates">1997 – 2002</span>
+            <ul>
+                <li>Oversaw contractors on highway construction in southwestern Saudi Arabia; managed a 120 km highway redesign.</li>
+                <li>Developed and managed monthly budgets for materials, supplies, equipment, and labor.</li>
+            </ul>
+            <p class="context">Earlier: Site Engineer, Al-Neil Bureau for Consulting, N'djamena, Chad, and Surveyor, Roads &amp; Bridges Corporation, Khartoum, Sudan (1993–1997) — surveying, cost estimating, training, and AutoCAD.</p>
+        </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="section">
+        <div class="section-title">Education</div>
+        <div class="edu-item">
+            <span class="deg">M.S., Geographical Information Systems (GIS)</span><br>
+            <span class="school">Saint Mary's University of Minnesota, Winona, MN · 2007</span>
+            <span class="honors"> · 4.0 GPA</span>
+        </div>
+        <div class="edu-item">
+            <span class="deg">B.S., Surveying Engineering</span><br>
+            <span class="school">University of Khartoum, Sudan · 1992</span>
+            <span class="honors"> · With Honors</span>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
