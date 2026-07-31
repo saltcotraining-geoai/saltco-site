@@ -31,7 +31,6 @@ Senior GIS Analyst and Surveying Engineer with 18+ years of experience in geospa
 - Founded and lead a movement teaching open-source geospatial skills to students with limited resources, from zero digital literacy to professional-level GIS.
 - Designed a 14-week curriculum (Linux 101 → 10-week beginner track → 4-week advanced automation track) delivered via YouTube tutorials, GitHub repositories, and offline-capable "digital library boxes."
 - Built an automated site-selection pipeline in PyQGIS (object-oriented, dependency-free) that replaces a manual multi-step workflow with a single-click process.
-- Developed a local AI spatial agent using Ollama to generate working PyQGIS and PostGIS code fully offline, protecting data privacy and removing cloud API costs.
 - Engineered an office-to-field pipeline combining PostGIS, QField, and offline MBTiles basemaps for data collection in areas with zero network coverage.
 
 ### Creator — Open-Source GIS Tutorial Library (YouTube + GitHub) | 2020 – Present
