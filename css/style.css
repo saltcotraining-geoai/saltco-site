@@ -63,7 +63,12 @@ a:hover {
     line-height: 1.2;
 }
 
-.navbar .brand span {
+.navbar .brand-name {
+    display: flex;
+    align-items: baseline;
+}
+
+.navbar .brand-name span {
     color: var(--accent);
 }
 
