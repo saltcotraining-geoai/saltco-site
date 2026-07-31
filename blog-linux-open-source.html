@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Linux and Open Source Enhanced My Computing Skills — saltco</title>
+    <meta name="description" content="My journey from proprietary GIS software to Linux and open source — and why I now teach it to people with limited resources.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <span class="brand-name">salt<span>co</span></span>
+        <span class="brand-tagline">Computing &amp; Capacity Building</span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="book.html">Book</a>
+        <a href="about.html">About</a>
+        <a href="resume.html">Resume</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">August 2026</span>
+        <h1>How Linux and Open Source Enhanced My Computing Skills</h1>
+
+        <p>For most of my career, I worked with the same tools everyone else used — proprietary software that cost thousands of dollars per seat, locked behind licenses, upgrades, and vendor support contracts. I was good at my job. I was also trapped inside a system where my skill was only as valuable as my employer's willingness to pay for the tools that ran it.</p>
+
+        <p>Then I discovered Linux and open source. And it changed everything — not just what I could do, but who I could help.</p>
+
+        <h2>The Beginning</h2>
+
+        <p>I spent 18 years in surveying and geospatial technology. I worked on offshore marine construction projects, managed geodatabases, and built maps that supported multi-million-dollar operations. The tools were powerful, but they came with a cost that most people never think about: they decided who got to participate.</p>
+
+        <p>If you could not afford the license, you could not learn the skill. If you could not learn the skill, you could not get the job. And if your country could not afford the software, its entire next generation of engineers was locked out of the profession — not by talent, but by money.</p>
+
+        <h2>Why Linux Changed My Mind</h2>
+
+        <p>Linux taught me something no vendor ever did: the computer is mine. The operating system is not a product I rent. It is a tool I own, a machine I can open up and understand. The terminal gave me a power that clicking buttons never could — the ability to chain commands, automate the boring work, and script my way out of problems instead of waiting for a feature update.</p>
+
+        <p>When I moved my geospatial work to QGIS, PostGIS, and Python, I stopped hitting paywalls. I started hitting possibilities. I could run the exact same analysis a corporate lab did — for free. On my own machine. With no license to renew and no one to ask permission.</p>
+
+        <h2>The Real Reason I Do This</h2>
+
+        <p>Here is the truth: I did not choose this path only for myself.</p>
+
+        <p>My passion is helping people with limited resources — students in Sudan and across the developing world who have the will but not the money. People who have the intelligence to become engineers, analysts, and developers, but who are told every day, by the price of software, that they do not belong.</p>
+
+        <p>I want to give them hope. Real hope, not empty encouragement. The kind of hope that comes from a working installation, a running script, a finished map — proof that if you have the will and you get the right help, you can change not only your own life but your entire community.</p>
+
+        <h2>What Open Source Actually Gives</h2>
+
+        <p>Open source is not just free software. It is a gift economy built on dignity. It says: your circumstances do not determine your potential. It says the knowledge is yours to take, to use, to teach, and to pass on.</p>
+
+        <p>That is why I built a full curriculum around it — Linux 101, QGIS, Python, PyQGIS, and now geospatial AI that runs locally on a laptop with no internet. Every lesson works offline. Every tool is free. Every student can teach the next one. That is capacity building: not giving someone a fish, but showing them how the whole system works so they can build their own pond, and teach their neighbor to do the same.</p>
+
+        <h2>Why I Write This Today</h2>
+
+        <p>I had the opportunity and the skill to make a difference. So I asked myself the simplest question: why not?</p>
+
+        <p>This blog is the beginning of that answer. Every article, every script, every video is a brick in the same wall — one that keeps out neither people nor nations, but only the barriers that say who is allowed to learn.</p>
+
+        <p>If you are reading this with limited resources, hear me clearly: you are not behind. You have everything you need, because the tools are free and the knowledge is open. Start with the terminal. Learn one command. Automate one task. Build one map.</p>
+
+        <p>Then teach someone else. That is how a life changes. That is how a community changes.</p>
+
+        <p>That is why I do this.</p>
+
+        <p><em>— Sallah</em></p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

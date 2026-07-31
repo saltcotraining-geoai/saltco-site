@@ -274,6 +274,22 @@ a:hover {
     color: var(--gray);
 }
 
+.article h1 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.article h2 {
+    font-size: 1.35rem;
+    color: var(--secondary);
+    margin: 1.5rem 0 0.5rem;
+}
+
+.article p em {
+    color: var(--dark);
+}
+
 /* ---------- Newsletter ---------- */
 .newsletter {
     background-color: var(--primary);
