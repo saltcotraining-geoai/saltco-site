@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support saltco — saltco</title>
+    <meta name="description" content="Support open-source geospatial AI education. Sponsor a course, fund offline SSD kits, or back saltco on Open Collective.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <span class="brand-name">salt<span>co</span></span>
+        <span class="brand-tagline">Computing &amp; Capacity Building</span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h2 class="section-title">Support saltco</h2>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>Our Promise</h3>
+        <p>Every lesson, script, and course on this site is and always will be <strong>free and open-source</strong>. We never monetize knowledge. What needs funding is the <strong>physical layer</strong> — the offline SSD kits, internet stipends, and event spaces that let students with limited resources actually learn.</p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>1. Sponsor on Open Collective</h3>
+        <p>Back saltco transparently on Open Collective. Every dollar is tracked in the open — you see exactly where it goes: hardware, data stipends, and delivery costs. Perfect for individuals and organizations who want public, visible support.</p>
+        <p><a href="https://opencollective.com" target="_blank" rel="noopener">Open Collective &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>2. Fund an Offline SSD "Digital Library Box"</h3>
+        <p>For a set cost, we build a pre-loaded offline drive: our YouTube library, Linux 101, QGIS installers, and curated datasets — ready for communities with little or no internet. Sponsors can fund boxes for a specific school, university, or region in Sudan.</p>
+        <p><em>Cost per box: covered per-unit hardware + shipping. Receipts published openly.</em></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>3. Sponsor a Course or Mapathon</h3>
+        <p>Co-brand a masterclass, a Linux 101 cohort, or a community Mapathon. Your logo appears equally alongside saltco on all materials. All joint content stays 100% open-source.</p>
+        <p><a href="partners.html">View Partnership MoU &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>4. Recurring Supporter</h3>
+        <p>Small monthly contributions sustain the recurring costs: website hosting, video storage, and tooling that keeps the library running. Every supporter is acknowledged publicly.</p>
+    </div>
+
+    <div class="newsletter">
+        <h3>Transparency Commitment</h3>
+        <p>We publish open financials. Every donation, sponsorship, and expense is itemized and visible — because trust is what open source runs on.</p>
+        <p style="margin-top: 0.5rem;"><a href="about.html" style="color:#9ae6b4;">Read About saltco &rarr;</a></p>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>
