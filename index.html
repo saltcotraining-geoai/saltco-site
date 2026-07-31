@@ -56,10 +56,14 @@
     <div class="newsletter">
         <h3>Join the saltco Newsletter</h3>
         <p>One email per month. A new lesson, a working script, no spam.</p>
-        <form action="#" method="post">
+        <form action="https://api.web3forms.com/submit" method="POST" id="newsletter-form">
+            <input type="hidden" name="access_key" value="6fa34d8f-6848-4115-9863-139f0a9f93b9">
+            <input type="hidden" name="subject" value="New saltco Newsletter Subscriber">
+            <input type="hidden" name="from_name" value="saltco Website">
             <input type="email" name="email" placeholder="you@email.com" required>
             <button type="submit">Subscribe</button>
         </form>
+        <p class="newsletter-success" style="display:none;">Thanks for subscribing! Check your inbox to confirm.</p>
     </div>
 </main>
 
@@ -77,6 +81,23 @@
     const toggle = document.querySelector('.nav-toggle');
     const links = document.querySelector('.nav-links');
     toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    const form = document.getElementById('newsletter-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        try {
+            const res = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+            if (res.ok) {
+                form.style.display = 'none';
+                document.querySelector('.newsletter-success').style.display = 'block';
+            } else {
+                alert('Something went wrong. Please try again.');
+            }
+        } catch (err) {
+            alert('Network error. Please try again.');
+        }
+    });
 </script>
 
 </body>
