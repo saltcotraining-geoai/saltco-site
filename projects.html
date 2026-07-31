@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — saltco</title>
+    <meta name="description" content="Open-source geospatial AI projects with working code.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">salt<span>co</span></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="book.html">Book</a>
+        <a href="about.html">About</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h2 class="section-title">Projects</h2>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>Spatial Site Selection Engine (PyQGIS)</h3>
+        <p>Object-oriented automation that turns a manual multi-step site-selection analysis into a single-click pipeline. Dependency-free, works offline.</p>
+        <p><a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">View on GitHub &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>Local Spatial AI Agent (Ollama + OpenCode)</h3>
+        <p>A private, offline AI copilot that generates working PyQGIS and PostGIS code. Full data privacy, zero cloud API costs.</p>
+        <p><a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">View on GitHub &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>Office-to-Field Pipeline (PostGIS + QField)</h3>
+        <p>Industry-standard field data collection with offline basemaps and database sync, working in zero-network areas.</p>
+        <p><a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">View on GitHub &rarr;</a></p>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

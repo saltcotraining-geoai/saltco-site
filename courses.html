@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses — saltco</title>
+    <meta name="description" content="Free and open-source GIS, Python, and AI courses. Offline-first, certificate-ready.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">salt<span>co</span></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="book.html">Book</a>
+        <a href="about.html">About</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h2 class="section-title">Courses</h2>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>Linux 101: Your First Step to Digital Independence</h3>
+        <p>Terminal commands, file systems, bash scripting. Escape software licensing traps forever.</p>
+        <p><a href="#">View on YouTube &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>10-Week Beginner Certificate: Open-Source Geospatial</h3>
+        <p>Data collection, cartography, and core QGIS mapping mechanics. Includes a digital badge on completion.</p>
+        <p><a href="#">View on YouTube &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>4-Week Advanced Track: Automation &amp; AI</h3>
+        <p>Python/PyQGIS automation, remote sensing, and local open-source AI integration.</p>
+        <p><a href="#">View on YouTube &rarr;</a></p>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

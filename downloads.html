@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads — saltco</title>
+    <meta name="description" content="Free open-source learning materials, scripts, and offline packages.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">salt<span>co</span></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="book.html">Book</a>
+        <a href="about.html">About</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h2 class="section-title">Downloads</h2>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>QGIS Training 101</h3>
+        <p>Structured beginner material for the open-source geospatial stack. Free to use, teach, and redistribute.</p>
+        <p><a href="QGIS_TRAINING_101.pdf">Download PDF &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>Setup Scripts</h3>
+        <p>One-command installers for Ollama, Python environments, and PostGIS containers.</p>
+        <p><a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub &rarr;</a></p>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>Digital Library Boxes</h3>
+        <p>Pre-packaged offline SSD content for communities with limited internet: tutorials, installers, and sample datasets.</p>
+        <p><a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub &rarr;</a></p>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

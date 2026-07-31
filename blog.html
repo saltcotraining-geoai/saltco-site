@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — saltco</title>
+    <meta name="description" content="Articles on open-source GIS, Python automation, and geospatial AI.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">salt<span>co</span></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="book.html">Book</a>
+        <a href="about.html">About</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h2 class="section-title">Blog</h2>
+
+    <div class="article">
+        <span class="date">Coming Soon</span>
+        <h3>What LLMs Can and Cannot Do for GIS</h3>
+        <p>An honest guide to where large language models help spatial work — and where they fail.</p>
+    </div>
+
+    <div class="article">
+        <span class="date">Coming Soon</span>
+        <h3>Prompt Patterns That Produce Working PyQGIS</h3>
+        <p>The exact system prompts that make a local AI generate clean, runnable spatial scripts.</p>
+    </div>
+
+    <div class="article">
+        <span class="date">Coming Soon</span>
+        <h3>RAG for GIS: Ask Your Documentation</h3>
+        <p>Build a retrieval-augmented generation knowledge base over QGIS docs that runs offline.</p>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

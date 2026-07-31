@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saltco — Open-Source Computing &amp; Capacity Building</title>
+    <meta name="description" content="Open-source geospatial AI education. Learn GIS, Python, and AI with tools that run offline — for everyone.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">salt<span>co</span></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="book.html">Book</a>
+        <a href="about.html">About</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <h1>Digital Independence Through Open-Source Geospatial AI</h1>
+    <p>Learn GIS, Python, and AI using tools that run on your own machine — offline, free, and yours forever. Built for students with limited resources, everywhere.</p>
+    <a class="cta" href="learning-paths.html">Start Learning</a>
+</header>
+
+<main class="container">
+    <h2 class="section-title">What You Build Here</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>GIS Foundations</h3>
+            <p>From zero to professional mapping with QGIS — no licenses, no cost, no barriers.</p>
+        </div>
+        <div class="card">
+            <h3>Python &amp; Automation</h3>
+            <p>Automate spatial workflows with PyQGIS, GDAL, and bash. Working code, not theory.</p>
+        </div>
+        <div class="card">
+            <h3>AI for Geospatial</h3>
+            <p>Local LLMs, RAG, and spatial agents that run offline. Privacy-first, cloud-free.</p>
+        </div>
+        <div class="card">
+            <h3>Capacity Building</h3>
+            <p>Train-the-trainer programs that multiply knowledge across communities.</p>
+        </div>
+    </div>
+
+    <div class="newsletter">
+        <h3>Join the saltco Newsletter</h3>
+        <p>One email per month. A new lesson, a working script, no spam.</p>
+        <form action="#" method="post">
+            <input type="email" name="email" placeholder="you@email.com" required>
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>
