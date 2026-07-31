@@ -7,10 +7,16 @@
     <language>en</language>
     <lastBuildDate>Sat, 01 Aug 2026 00:00:00 GMT</lastBuildDate>
     <item>
-      <title>Welcome to saltco</title>
-      <link>https://saltco.org/blog.html</link>
-      <description>saltco is live. Open-source geospatial AI education for everyone, built offline-first.</description>
+      <title>Don't Throw It Away — How Linux Gives Old Laptops a Second Life</title>
+      <link>https://saltco.org/blog-revive-old-laptop.html</link>
+      <description>An old laptop is not obsolete — it's just running the wrong software. Why Linux revives old hardware and makes powerful, free computing possible for everyone.</description>
       <pubDate>Sat, 01 Aug 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How Linux and Open Source Enhanced My Computing Skills</title>
+      <link>https://saltco.org/blog-linux-open-source.html</link>
+      <description>My journey from proprietary GIS software to Linux and open source — and why I now teach it to people with limited resources.</description>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
     </item>
   </channel>
 </rss>
