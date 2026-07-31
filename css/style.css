@@ -58,10 +58,26 @@ a:hover {
     font-weight: 700;
     color: var(--white);
     letter-spacing: 0.05em;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
 }
 
 .navbar .brand span {
     color: var(--accent);
+}
+
+.navbar .brand-tagline {
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0.85;
+}
+
+.navbar .brand .brand-tagline {
+    color: var(--white);
 }
 
 .nav-links {
