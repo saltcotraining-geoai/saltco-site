@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>saltco — Open-Source Computing &amp; Capacity Building</title>
+    <link>https://saltco.org/</link>
+    <description>Open-source geospatial AI education. Learn GIS, Python, and AI with tools that run offline.</description>
+    <language>en</language>
+    <lastBuildDate>Sat, 01 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Welcome to saltco</title>
+      <link>https://saltco.org/blog.html</link>
+      <description>saltco is live. Open-source geospatial AI education for everyone, built offline-first.</description>
+      <pubDate>Sat, 01 Aug 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
