@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Independence Training Route Map — saltco</title>
+    <meta name="description" content="One route, two branches: from the typing gate and Linux foundation to LibreOffice, GIS & QGIS, Python, PyQGIS, and AI for geospatial analytics. Free download.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <span class="brand-name">salt<span>co</span></span>
+        <span class="brand-tagline">Computing &amp; Capacity Building</span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">August 2026</span>
+        <h1>One Route, Two Branches: The Training Route Map</h1>
+
+        <p>I often get asked the same question: <em>where do I start, and where does this lead?</em> So I drew the answer. The <strong>Training Route Map</strong> is a single picture of the whole journey — from a learner who has never typed at speed, all the way to a geospatial professional who builds maps and AI dashboards for decision makers.</p>
+
+        <p>It is free to download as a two-page handout, and every step uses only open source software that runs on 2&ndash;4&nbsp;GB RAM laptops. No licenses. No paywalls. No barriers.</p>
+
+        <p><a href="digital-independence-roadmap.pdf">Download the Route Map (PDF) &rarr;</a> &nbsp;|&nbsp; <a href="https://github.com/saltcotraining-geoai/Digital-Independence-using-Open-Source/blob/main/support_files/ROADMAP.md" target="_blank" rel="noopener">Route in Markdown &rarr;</a></p>
+
+        <h2>The Prerequisite Floor</h2>
+
+        <p>Nobody jumps into advanced GIS. Every learner, whether a teacher, a student, or a project manager, starts at the same two gates:</p>
+
+        <p><strong>Gate 0 — Typing.</strong> Master typing before any class: 25+ WPM at 95% accuracy, three consecutive runs. It sounds small, but it is the single biggest predictor of who finishes the track. The terminal, spreadsheets, and Python are all built for people who do not have to look at the keyboard.</p>
+
+        <p><strong>Tier 1 — Digital Independence.</strong> The 10-episode Linux foundation: installing the system, learning the terminal, writing the first Bash script, and publishing a GitHub portfolio. Completing it earns the Digital Independence certificate — the mandatory doorway into every track below.</p>
+
+        <h2>Then Both Tracks Are Open</h2>
+
+        <p>With the foundation done, learners choose a branch. Both branches stay open — the certificate is what lets them choose, and change their mind later.</p>
+
+        <p><strong>Track A — Office (LibreOffice).</strong> Calc first, then Writer, then Impress. Designed for administration, data entry, NGO reporting, and teaching materials. This is the fastest route to paid community work.</p>
+
+        <p><strong>Track B — The Geospatial Career.</strong> A six-step ladder: GIS &amp; QGIS for beginners (10 weeks), QGIS advanced (4 weeks), Python for GIS, PyQGIS automation, AI for geospatial analytics and dashboards, and the capstone of web mapping with Folium and Leaflet. Each module requires the one before it — no mid-way entry — because these skills genuinely build on one another.</p>
+
+        <h2>Why Prerequisites Matter</h2>
+
+        <p>Gates are not meant to exclude. They are meant to protect the learner and the teacher. A student who passes the typing gate and the Linux foundation has already proven the two things every advanced course needs: commitment and a working machine. We only invest our energy in learners who have proven they are serious — and they, in turn, get a certificate that proves it back to employers.</p>
+
+        <p>This is the same model used by universities and professional bodies worldwide: the floor protects the ceiling.</p>
+
+        <h2>Start At the Gate</h2>
+
+        <p>If you are reading this and you have an old laptop, start where I ask every learner to start. Master typing. Take the Digital Independence course. Publish your first repo. Then open the route map again and pick your branch.</p>
+
+        <p>You are not behind. The whole route is two pages, the tools are free, and every teacher you meet on that route — including me — has already walked it.</p>
+
+        <p><em>— Sallah</em></p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>
