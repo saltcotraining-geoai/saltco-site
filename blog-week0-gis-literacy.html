@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Orientation &amp; GIS Literacy — saltco</title>
+    <meta name="description" content="Week 0 — Applied Spatial Analysis Using QGIS - Orientation & GIS Literacy: GIS defined, spatial vs aspatial, vector vs raster, why 70% is data cleaning, framing a fundable GIS proposal, and configuring QGIS for UTM 36N.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <span class="brand-name">salt<span>co</span></span>
+        <span class="brand-tagline">Computing &amp; Capacity Building</span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">September 2026 — Week 0 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Orientation &amp; GIS Literacy</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 06 Sep 2026 · 47:33 · <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">Watch on YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Do live (Steps 1–3) · Finish offline from the video:</strong> Install QGIS → configure metres / relative paths / plugins → load all 9 Sudan layers + DEM, hillshade &amp; population rasters.<br>
+            <strong>Data:</strong> <code>sdn_datasets_for_training/</code> → <code>~/Sudan_GIS_Training/</code> (flash drive) &nbsp;|&nbsp; <strong>Deliverable (prep, not graded):</strong> screenshot your configured project to WhatsApp <code>Course_Helpers</code>.
+        </div>
+
+        <p>I write this after every live session — so students who lost power or signal can catch up in minutes, and so our community has a searchable archive for the future. Week 0 is deliberately ungraded and setup-heavy: if your machine, QGIS, and project are configured correctly today, every week after builds without friction.</p>
+
+        <p>Week 0 answers one question: <strong>"Why can I see Sudan on any map, but not my own field points — and how do I make them match a real map?"</strong></p>
+
+        <h2>1. What GIS Actually Is</h2>
+        <p><strong>GIS is computer software that lets you work with data tied to a specific location on Earth.</strong></p>
+        <p>Every GIS record has two components:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li><strong>Spatial</strong> — <em>where</em> it is: location as X,Y or Lat/Long, geometry, and its coordinate reference system (CRS)</li>
+            <li><strong>Aspatial (attribute)</strong> — <em>what</em> it is: a table / relation describing the feature (name, type, area, population)</li>
+        </ul>
+        <p>No location = no GIS. No attributes = just a drawing.</p>
+
+        <h2>2. Data Models: Vector vs Raster</h2>
+        <p>Two ways the real world is represented:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Vector</strong> — discrete objects: <strong>Points</strong> (wells, field plots), <strong>Lines</strong> (roads, rivers), <strong>Polygons</strong> (parcels, districts). Precise, topology-aware, best for survey and cadastral work.</li>
+            <li><strong>Raster</strong> — continuous grid of cells: <strong>DEM, hillshade, population</strong>. Each cell holds a value. Best for surfaces and analysis across space.</li>
+        </ul>
+        <p>You choose the model by the question, not the software. We will use both — often together.</p>
+
+        <h2>3. Data Is the Project — 70% Is Cleaning</h2>
+        <p>As practitioners we spend <strong>more than 70% of our time cleaning data</strong> before any model or analysis runs. Bad data produces a bad map, no matter how good the tool.</p>
+        <p>That is why I prepared the <strong>Sudan training dataset</strong> — clean, reprojected, and offline-ready — so you can focus on learning analysis instead of hunting files all semester. Copy <code>sdn_datasets_for_training/</code> from your flash drive to <code>~/Sudan_GIS_Training/</code>. After loading, open the attribute tables and check <code>fclass</code>, area, and CRS. Knowing your data <em>is</em> part of the analysis.</p>
+
+        <h2>4. The Missing Piece for Surveyors: CRS — Degrees vs Metres</h2>
+        <p>This is what most beginners miss: <strong>WGS84 (EPSG:4326) is in degrees; UTM Zone 36N (EPSG:32636) is in metres.</strong> Sudan sits in UTM 36N. If you measure distance in degrees you are wrong.</p>
+        <p>In Week 0 we set QGIS once to <strong>metres / square metres</strong>, save the project with <strong>relative paths</strong> (so it still opens after you move the folder), and verify plugins — <code>qgis2web</code> will matter in Week 8.</p>
+        <p>Live check we used: <em>"What units does UTM 36N use? 1 = degrees · 2 = metres"</em> → <strong>2 = metres.</strong></p>
+
+        <h2>5. How to Frame a GIS Project That Gets Funded</h2>
+        <p>A GIS project is not "make a map." It is a proposal that must convince an NGO or donor to fund it. Structure it like this:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Research Question</strong> — specific, answerable, timed</li>
+            <li><strong>Objectives</strong> — what you will deliver to answer it</li>
+            <li><strong>Methodology</strong> — data, tools (QGIS, free &amp; open source), steps</li>
+            <li><strong>Statistical / Spatial Models</strong> — e.g., buffer, overlay, zonal statistics, MCDA</li>
+            <li><strong>Iteration</strong> — loop between 1–4 and reframe as needed before you commit</li>
+            <li><strong>Analysis</strong> — run it</li>
+            <li><strong>Insights &amp; Delivery</strong> — maps, atlas, web map — what the decision-maker sees</li>
+            <li><strong>Budget</strong> — people, time, fieldwork, printing, hosting</li>
+        </ol>
+        <p>Bring that one-page proposal to any NGO or agency and they can say yes. Without it they cannot. We will practice this ladder all the way to the Capstone.</p>
+
+        <h2>6. Build in Public: GitHub &amp; Teams</h2>
+        <p>Create your GitHub account now. Push your weekly deliverable, share knowledge, work as teams, and keep learning in public. Your profile <em>is</em> your portfolio — donors and employers check it. GIS is a team sport; that is how real projects survive.</p>
+
+        <h2>What You Should Have Now</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>QGIS installed on Linux Mint, project saved with <strong>relative paths</strong></li>
+            <li>All <strong>9 Sudan layers</strong> (<code>training_utm36n/*.gpkg</code>) + <strong>DEM + hillshade + population rasters</strong> loaded on canvas</li>
+            <li>Canvas measuring in <strong>metres</strong>, plugins verified</li>
+            <li>Screenshot posted to WhatsApp <code>Course_Helpers</code></li>
+        </ul>
+        <p>No graded submission this week — just proof you are ready.</p>
+
+        <h2>Chapters</h2>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">00:00 Welcome &amp; how the safety net works
+03:58 Install &amp; launch QGIS
+07:56 Configure once: metres / relative paths / plugins
+15:53 Load all 9 Sudan layers + DEM + population rasters
+27:47 Chat check — "What units does UTM 36N use?"
+31:44 Recap &amp; your Week-0 deliverable
+35:42 Q&amp;A — open floor</pre>
+
+        <h2>What's Next</h2>
+        <p><strong>Week 1 — Field Data Import &amp; Contextualization (Project 1A):</strong> we bring <code>field_plots.csv</code> onto the real Sudan map and make your points visible for the first time. Come with your Week 0 project ready. <em>Every Sunday 9:45 a.m.</em></p>
+
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Data <code>sdn_datasets_for_training/</code> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Full publish kit in <code>recordings/zoom_recordings/00_WEEK0/</code></p>
+
+        <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

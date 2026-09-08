@@ -5,7 +5,13 @@
     <link>https://saltco.org/</link>
     <description>Open-source geospatial AI education. Learn GIS, Python, and AI with tools that run offline.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 11 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 08 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Applied Spatial Analysis Using QGIS - Orientation &amp; GIS Literacy</title>
+      <link>https://saltco.org/blog-week0-gis-literacy.html</link>
+      <description>Applied Spatial Analysis Using QGIS - Orientation &amp; GIS Literacy: GIS defined, spatial vs aspatial, vector vs raster, why 70% is data cleaning, framing a fundable GIS proposal, and configuring QGIS for UTM 36N.</description>
+      <pubDate>Mon, 08 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>It Starts at the Keyboard: Why I Teach Open Source from the Bottom Up</title>
       <link>https://saltco.org/blog-it-starts-at-the-keyboard.html</link>
