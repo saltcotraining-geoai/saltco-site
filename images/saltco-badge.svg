@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="saltco — Open Map Book mark (transparent)">
+  <polygon points="256,148 232,150 182,160 152,190 120,318 160,300 212,296 256,314" fill="#0E7C7B"/>
+  <polygon points="256,148 280,150 330,160 360,190 392,318 352,300 298,296 256,314" fill="#0A5C5B"/>
+  <rect x="249" y="148" width="14" height="178" rx="7" fill="#072E2E"/>
+  <polyline points="150,302 182,280 198,296 226,262" fill="none" stroke="#FAF7F0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="150" cy="302" r="7" fill="#E8A33D"/>
+  <circle cx="226" cy="262" r="7" fill="#E8A33D"/>
+  <polygon points="256,296 238,234 256,192 274,234" fill="#E8A33D"/>
+  <circle cx="256" cy="242" r="12" fill="#FAF7F0"/>
+  <circle cx="256" cy="242" r="6" fill="#0A5C5B"/>
+  <circle cx="352" cy="176" r="11" fill="#3BA272"/>
+  <polygon points="345,193 359,193 352,218" fill="#3BA272"/>
+  <circle cx="352" cy="176" r="5" fill="#FAF7F0"/>
+</svg>

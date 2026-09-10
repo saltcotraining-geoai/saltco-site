@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 256" width="1024" height="256" role="img" aria-label="saltco wordmark">
+  <rect width="1024" height="256" fill="#FAF7F0"/>
+  <g transform="translate(40,48) scale(0.3125)">
+    <polygon points="256,148 232,150 182,160 152,190 120,318 160,300 212,296 256,314" fill="#0E7C7B"/>
+    <polygon points="256,148 280,150 330,160 360,190 392,318 352,300 298,296 256,314" fill="#0A5C5B"/>
+    <rect x="249" y="148" width="14" height="178" rx="7" fill="#072E2E"/>
+    <polyline points="150,302 182,280 198,296 226,262" fill="none" stroke="#FAF7F0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="150" cy="302" r="7" fill="#E8A33D"/>
+    <circle cx="226" cy="262" r="7" fill="#E8A33D"/>
+    <polygon points="256,296 238,234 256,192 274,234" fill="#E8A33D"/>
+    <circle cx="256" cy="242" r="12" fill="#FAF7F0"/>
+    <circle cx="256" cy="242" r="6" fill="#0A5C5B"/>
+    <circle cx="352" cy="176" r="11" fill="#3BA272"/>
+    <polygon points="345,193 359,193 352,218" fill="#3BA272"/>
+    <circle cx="352" cy="176" r="5" fill="#FAF7F0"/>
+  </g>
+  <text x="228" y="128" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="76" font-weight="700" fill="#0A3C3C">saltco</text>
+  <text x="232" y="160" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="22" letter-spacing="3" fill="#0A5C5B">OPEN-SOURCE COMPUTING &amp; CAPACITY BUILDING</text>
+</svg>
