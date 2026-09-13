@@ -40,7 +40,7 @@
 
         <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
             <strong>Do live (this session):</strong> build the project folders → meet the QGIS interface → import the CSV as points → add context → export to GeoPackage → add the GPX track.<br>
-            <strong>Data:</strong> <code>~/Sudan_GIS_Training/04_Survey_Sample_Files/field_plots.csv</code> + <code>01_Data/training_utm36n/roads.gpkg</code>, <code>water_bodies.gpkg</code> &nbsp;|&nbsp; <strong>Deliverable (graded):</strong> your <code>field_plots</code> point layer drawn correctly over offline Sudan roads/water — screenshot to WhatsApp <code>Course_Helpers</code>.
+            <strong>Data:</strong> <code>~/Sudan_GIS_Training/04_Survey_Sample_Files/field_plots.csv</code> + <code>01_Data/training_wgs84/roads.gpkg</code>, <code>water_bodies.gpkg</code> &nbsp;|&nbsp; <strong>Deliverable (graded):</strong> your <code>field_plots</code> point layer drawn correctly over offline Sudan roads/water — screenshot to WhatsApp <code>Course_Helpers</code>.
         </div>
 
         <p>I write this after every live session — so students who lost power or signal can catch up in minutes, and so our community has a searchable archive for the future. Week 1 is where the numbers stop being numbers. Yesterday those 20 points were text in a spreadsheet; today they live on a real map of Sudan.</p>
@@ -90,8 +90,8 @@
         <h2>5. Context: Points Are Not a Map</h2>
         <p>Dots on a blank canvas mean little. So we added offline context — what a surveyor truly needs to see around the field data:</p>
         <ol style="margin: 0.5rem 0 1rem 1.5rem;">
-            <li><strong>Layer → Add Layer → Add Vector Layer</strong> and load <code>01_Data/training_utm36n/roads.gpkg</code> and <code>water_bodies.gpkg</code></li>
-            <li>Watch the <strong>bottom-right panel</strong>: mixing WGS 84 points with UTM layers, QGIS projects one onto the other <em>on the fly</em></li>
+            <li><strong>Layer → Add Layer → Add Vector Layer</strong> and load <code>01_Data/training_wgs84/roads.gpkg</code> and <code>water_bodies.gpkg</code></li>
+            <li>This week everything stays in <strong>WGS 84</strong> (EPSG:4326) — check the <strong>bottom-right panel</strong>: the project CRS reads <em>degrees</em>, and the points and roads align with no re-projection because they share one CRS. The switch to metres comes next week.</li>
             <li><strong>Zoom to your layer</strong> — the plots now sit sensibly among Sudan's roads and a water body, the way the field crew recorded them</li>
         </ol>
         <p>This is the week's lesson in one view: <strong>raw coordinates became features only when given X, Y and a CRS; they became information only when given context.</strong></p>
@@ -125,7 +125,7 @@
         <h2>What's Next</h2>
         <p><strong>Week 2 — Permanent Metric Transformation (Project 1B):</strong> those points are still in degrees, and degrees cannot measure distance in metres. Next Sunday we convert the field points to <strong>UTM Zone 36N</strong> — permanently, on disk — so every buffer and area from here on is real engineering maths. And watching ahead to Week 3: we'll <em>create our own data</em> by <strong>digitizing</strong> — drawing boundaries yourself, the other way data is born when no existing dataset exists. <em>Every Sunday 9:45 a.m.</em></p>
 
-        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Data in <code>04_Survey_Sample_Files/</code> and <code>01_Data/training_utm36n/</code> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Full publish kit in <code>recordings/zoom_recordings/01_WEEK1/</code></p>
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Data in <code>04_Survey_Sample_Files/</code> and <code>01_Data/training_wgs84/</code> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Full publish kit in <code>recordings/zoom_recordings/01_WEEK1/</code></p>
 
         <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
     </article>
