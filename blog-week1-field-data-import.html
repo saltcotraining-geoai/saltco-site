@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Field Data Import &amp; Contextualization — saltco</title>
+    <meta name="description" content="Week 1 — Applied Spatial Analysis Using QGIS - Field Data Import & Contextualization (Project 1A): the standard GIS project folder structure, a first tour of the QGIS interface, importing a CSV of field points as real features, symbolising them, exporting to GeoPackage, and adding a GPX track.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">September 2026 — Week 1 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Field Data Import &amp; Contextualization</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 13 Sep 2026 · 24:17 · <a href="https://youtu.be/VmaY0wvA8h4" target="_blank" rel="noopener">Watch on YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Do live (this session):</strong> build the project folders → meet the QGIS interface → import the CSV as points → add context → export to GeoPackage → add the GPX track.<br>
+            <strong>Data:</strong> <code>~/Sudan_GIS_Training/04_Survey_Sample_Files/field_plots.csv</code> + <code>01_Data/training_utm36n/roads.gpkg</code>, <code>water_bodies.gpkg</code> &nbsp;|&nbsp; <strong>Deliverable (graded):</strong> your <code>field_plots</code> point layer drawn correctly over offline Sudan roads/water — screenshot to WhatsApp <code>Course_Helpers</code>.
+        </div>
+
+        <p>I write this after every live session — so students who lost power or signal can catch up in minutes, and so our community has a searchable archive for the future. Week 1 is where the numbers stop being numbers. Yesterday those 20 points were text in a spreadsheet; today they live on a real map of Sudan.</p>
+
+        <p>This week's one question: <strong>"My survey device gave me a CSV — how do those raw coordinates become points on a map?"</strong></p>
+
+        <h2>1. GIS — the One-Minute Recap</h2>
+        <p>From Week 0, on one breath: <strong>GIS is software for working with data tied to a location on Earth.</strong> Every record carries a <strong>spatial</strong> part (<em>where</em> — coordinates, geometry, CRS) and an <strong>aspatial</strong> part (<em>what</em> — attributes in a table). No location = no GIS. No attributes = just a drawing.</p>
+        <p>This week we finally use both halves: the CSV brings the attributes, and the coordinates give them a <em>where</em> on the Sudan map.</p>
+
+        <h2>2. The Standard GIS Project Folders</h2>
+        <p>Before a single point is imported, a real GIS project starts as a <strong>well-organised folder</strong>. Data, rasters, survey exports, outputs — if everything is numbered and predictable, any project, any colleague, any future-you can find it. This is the exact layout on your USB kit, mirrored in <code>~/Sudan_GIS_Training/</code>:</p>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">01_Data              # source GIS data — GeoPackages (roads, water, admin)
+02_DEM_Rasters        # elevation / hillshade
+03_Population_Raster  # population grids
+04_Survey_Sample_Files# field exports — this week: field_plots.csv and the GPX
+05_Projects_Labs      # lab guides and your project files
+06_Handouts_Slides    # session slides and handouts
+07_Troubleshooting    # the common-errors sheet
+08_Install_Guides     # Linux + QGIS installs</pre>
+        <p>The habit matters more than the names: <strong>data in, data out, and work-in-progress never mix.</strong> When we export our GeoPackages today, they go into the project folder — not scattered across the desktop.</p>
+
+        <h2>3. Your First Tour of QGIS</h2>
+        <p>QGIS is one window of many panels, and a good GIS user knows where the buttons live. We walked the whole interface so every later week speaks the same language:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li><strong>Menu bar</strong> — the full power hidden behind <em>Project, Layer, Processing, Vector, Raster</em>…</li>
+            <li><strong>Toolbars</strong> — shortcuts for the tools you use daily; restore any you closed via <strong>View → Toolbars</strong></li>
+            <li><strong>Browser panel</strong> — file access to every Geopackage, folder and CSV in one tree</li>
+            <li><strong>Layers panel</strong> — your map's control deck: which layers are on, what order, and their styles</li>
+            <li><strong>Map canvas</strong> — the map itself; scroll to zoom, drag to pan</li>
+            <li><strong>Locator bar</strong> — press <code>Ctrl+K</code> in the status area and type anything: a layer name, a place, an expression</li>
+            <li><strong>Status bar</strong> — the strip along the bottom: live coordinates, scale, and the all-important <strong>project CRS</strong> on the right</li>
+        </ul>
+        <p>Panels are opened and closed under <strong>View → Panels</strong>. Ten minutes spent here is an investment every later lab draws on.</p>
+
+        <h2>4. The Mission: 20 Raw Points, One Real Map</h2>
+        <p><strong>"Your GPS/total station dumped 20 points as a CSV. Put them on a real map of Sudan."</strong> Open <code>field_plots.csv</code> in a text editor first — it is just text: <code>Plot_ID</code>, <code>Longitude</code>, <code>Latitude</code>, <code>Owner_Name</code>, <code>Land_Use</code>.</p>
+        <p>To draw that text, QGIS needs <strong>three answers</strong>: which column is X, which is Y, and what CRS?</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Layer → Add Layer → Add Delimited Text Layer</strong> (or Data Source Manager → <em>Delimited Text</em>) and browse to <code>field_plots.csv</code></li>
+            <li>Format <em>CSV</em> → Geometry definition <em>Point coordinates</em></li>
+            <li><strong>X = Longitude, Y = Latitude</strong>, and set the Geometry CRS to <strong>EPSG:4326 — WGS 84</strong> (degrees — the format your device logged)</li>
+            <li><strong>Add → Close.</strong> Twenty black dots now sit on the map, near Khartoum.</li>
+        </ol>
+        <p>That is the whole trick of field import: read the file to learn it, tell QGIS which column is which, and give it the CRS. A CSV that shows no points is almost always missing one of those three answers.</p>
+
+        <h2>5. Context: Points Are Not a Map</h2>
+        <p>Dots on a blank canvas mean little. So we added offline context — what a surveyor truly needs to see around the field data:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Layer → Add Layer → Add Vector Layer</strong> and load <code>01_Data/training_utm36n/roads.gpkg</code> and <code>water_bodies.gpkg</code></li>
+            <li>Watch the <strong>bottom-right panel</strong>: mixing WGS 84 points with UTM layers, QGIS projects one onto the other <em>on the fly</em></li>
+            <li><strong>Zoom to your layer</strong> — the plots now sit sensibly among Sudan's roads and a water body, the way the field crew recorded them</li>
+        </ol>
+        <p>This is the week's lesson in one view: <strong>raw coordinates became features only when given X, Y and a CRS; they became information only when given context.</strong></p>
+
+        <h2>6. Symbolise — Make the Data Yours</h2>
+        <p>A good survey map reads instantly. In the <strong>Layers panel</strong>, open the <code>field_plots</code> layer → <strong>Layer Styling → Symbology</strong> (or double-click the layer → Symbology). Pick a colour and symbol that stand out against the basemap, sized so every plot is visible. Styling is not decoration — it is how you make the map communicate before anyone reads a single label.</p>
+
+        <h2>7. Export to GeoPackage — Data That Outlives the Session</h2>
+        <p>A CSV in memory is not a deliverable. We exported the styled points properly:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Right-click <code>field_plots</code> → <strong>Export → Save Features As…</strong></li>
+            <li>Format <strong>GeoPackage (.gpkg)</strong>, and save it into your <strong>project folder</strong> (the structure from Section 2 — outputs never mix with raw data)</li>
+            <li>Give the layer a proper name — future-you, next week, will thank you</li>
+        </ol>
+        <p>GeoPackage is our house format: one self-contained file with geometry <em>and</em> attributes, no shapefile's 10-character column limit, and CRS-aware. Your data now exists as a real GIS layer, saved where it belongs.</p>
+
+        <h2>8. The GPX Track — a Format That Carries Its Own Map</h2>
+        <p>Then the same idea from a different angle: a <strong>GPX</strong> file — the standard GPS-track exchange format. Loading it is <strong>Layer → Add Layer → Add Vector Layer → the <code>.gpx</code> file</strong>. QGIS reads its geometry <em>and its CRS automatically</em> — no columns to assign, no CRS to declare. Symbolise the track like any layer.</p>
+        <p>The difference worth keeping for the exam of everyday practice: <strong>GPX carries its own CRS and geometry; a CSV must be told which columns are X/Y and what CRS they are in.</strong> Same goal, two contracts.</p>
+
+        <h2>What You Should Have Now</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>The <strong>standard project folders</strong> in <code>~/Sudan_GIS_Training/</code></li>
+            <li>A first confident tour of the <strong>QGIS interface</strong> — menus, panels, Browser, Layers, canvas, Locator, status bar</li>
+            <li><code>field_plots</code> — 20 CSV points styled and <strong>exported as a GeoPackage</strong> into your project folder</li>
+            <li>Offline context (<code>roads</code>, <code>water_bodies</code>) loaded and aligned with your points</li>
+            <li>A <strong>GPX track</strong> imported and symbolised — compare it to the CSV's three-question dance</li>
+        </ul>
+        <p>Then submit the graded deliverable: a screenshot of your <code>field_plots</code> layer over Sudan roads/water, to WhatsApp <code>Course_Helpers</code>.</p>
+
+        <h2>What's Next</h2>
+        <p><strong>Week 2 — Permanent Metric Transformation (Project 1B):</strong> those points are still in degrees, and degrees cannot measure distance in metres. Next Sunday we convert the field points to <strong>UTM Zone 36N</strong> — permanently, on disk — so every buffer and area from here on is real engineering maths. And watching ahead to Week 3: we'll <em>create our own data</em> by <strong>digitizing</strong> — drawing boundaries yourself, the other way data is born when no existing dataset exists. <em>Every Sunday 9:45 a.m.</em></p>
+
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Data in <code>04_Survey_Sample_Files/</code> and <code>01_Data/training_utm36n/</code> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Full publish kit in <code>recordings/zoom_recordings/01_WEEK1/</code></p>
+
+        <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>
