@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Permanent Metric Transformation — saltco</title>
+    <meta name="description" content="Week 2 — Applied Spatial Analysis Using QGIS - Permanent Metric Transformation (Project 1B): create data from scratch — a LineString and a parks polygon layer digitized in QGIS — then permanently reproject from WGS84 to UTM Zone 36N (EPSG:32636) and compute real areas in square metres with the Field Calculator and $area.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">September 2026 — Week 2 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Permanent Metric Transformation</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 20 Sep 2026 · 24:20 · <a href="https://youtu.be/sCckj50_T30" target="_blank" rel="noopener">Watch on YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Do live (this session):</strong> reopen Week 1 in WGS84 → create two layers by digitizing (a LineString and a parks polygon layer) → permanently reproject them to UTM 36N → prove it in a fresh project → add an area field with <code>$area</code>.<br>
+            <strong>Data:</strong> none imported this week — we create it from scratch &nbsp;|&nbsp; <strong>Deliverable (graded):</strong> your LineString + parks layers in <strong>UTM Zone 36N (EPSG:32636)</strong>, units = metres, with an <code>area</code> field = <code>$area</code> in square metres — screenshot to WhatsApp <code>Course_Helpers</code>.
+        </div>
+
+        <p>I write this after every live session — so students who lost power or signal can catch up in minutes, and so our community has a searchable archive for the future. Last week we imported data into QGIS. This week we did something bigger: we <strong>created data from nothing</strong>, and we made it <strong>measurable</strong>.</p>
+
+        <p>This week's one question: <strong>"My map is drawn in degrees — how do I get data I can measure, in metres?"</strong></p>
+
+        <h2>Why Week 2 Exists</h2>
+        <p>Last week we brought our sample <strong>CSV and GPS files</strong> into QGIS — raw field points and context layers, everything in <strong>WGS84 (EPSG:4326), units = degrees</strong>. Degrees are great for locating a place on the globe, but they are useless when you need distances, buffers, or areas.</p>
+        <p>Week 2 answered the next question: <em>how do I go from "drawn on a map in degrees" to data I can actually measure in metres?</em> And while we were at it, we created our <strong>first data from scratch</strong> — not imported, drawn.</p>
+        <p>The plan, live on screen:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Open last week's project — everything in WGS84</li>
+            <li>Create two layers by digitizing: a <strong>linear feature</strong> and a <strong>polygon feature</strong> (parks)</li>
+            <li>Reproject them <strong>permanently</strong> from WGS84 to UTM Zone 36N in metres</li>
+            <li>Close QGIS completely, open a new project, add the projected layers — prove the map now reads <strong>EPSG:32636 in metres</strong></li>
+            <li>Add an <strong>area field</strong> to the parks layer with the Field Calculator and <strong><code>$area</code></strong></li>
+        </ol>
+
+        <h2>1) Recap — Everything Is Still in Degrees</h2>
+        <p>We opened the project from Week 1: the sample CSV and GPS layers, all sitting in <strong>WGS84 (EPSG:4326)</strong> — geographic, <strong>degrees</strong>. That was the right choice for Week 1: import and alignment first.</p>
+        <p>But degrees have no fixed length. One degree of longitude near Sudan is a different real-world distance than one degree near the equator. So before we can measure anything honestly — distance, buffer, area — the data must be in <strong>metres</strong>.</p>
+
+        <h2>2) Creating Data From Scratch — The Digitizing Toolbar</h2>
+        <p>This week there was no input file to import. We made our own data:</p>
+        <p><strong>Layer → Create Layer → New GeoPackage Layer.</strong> Before drawing anything, set three things:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li><strong>Path</strong> — where the file is saved (choose before you draw)</li>
+            <li><strong>Table name</strong> — the layer's name in the project</li>
+            <li><strong>CRS</strong> — this week we start in the project's default <strong>WGS84</strong>; we reproject afterwards</li>
+        </ul>
+        <p>Then add the attribute fields that every road or park feature will carry:</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.5rem 0 1rem; background: var(--light); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Layer</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Geometry</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Fields added</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Linear feature (e.g. roads)</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>LineString</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>name</code>, <code>remarks</code>, <code>created_by</code>, <code>created_date</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem;">Parks</td>
+                    <td style="padding: 0.5rem 0.75rem;"><strong>Polygon</strong></td>
+                    <td style="padding: 0.5rem 0.75rem;"><code>name</code>, <code>type</code>, <code>remarks</code>, <code>created_by</code>, <code>created_date</code></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>With the two empty layers ready, we switched on <strong>editing</strong> (the pencil icon) and used the <strong>digitizing toolbar</strong> to click the features straight onto the map. Drawing your own data is the foundation of cadastral work: you are not importing someone else's map, you are building the map.</p>
+        <p><em>Tip:</em> pick the geometry type for the question — <strong>LineString</strong> for anything linear (roads, rivers, pipelines), <strong>Polygon</strong> for anything with area (parks, plots, districts).</p>
+
+        <h2>3) Permanent Reprojection — Degrees to Metres</h2>
+        <p>A map canvas can reproject <strong>on-the-fly</strong> — it just redraws things so they <em>look</em> right. But the data itself is still stored in degrees. To measure, we need a <strong>permanent</strong> change.</p>
+        <p><strong>Vector → Data Management Tools → Reproject Layer</strong>, target CRS <strong>WGS 84 / UTM Zone 36N (EPSG:32636)</strong>. South Sudan sits inside UTM zone 36N, so this is <em>our</em> metric zone.</p>
+        <p>The result is a brand-new layer, stored permanently in <strong>metres</strong>. The original WGS84 layers stay untouched — we did not destroy the source, we created projected copies. This is the difference between "it looks projected" and "it IS projected".</p>
+
+        <h2>4) Prove It — Close, Reopen, Fresh Project</h2>
+        <p>Faith is not enough in GIS — verify. We closed the application <strong>completely</strong>, opened a <strong>new</strong> QGIS project, and added the reprojected layers with <strong>Layer → Add Layer → Add Vector Layer</strong>.</p>
+        <p>Two confirmations on the canvas:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li>The <strong>coordinate readout</strong> (bottom status bar) now reports positions in <strong>metres</strong>, not degrees</li>
+            <li>Layer properties show <strong>EPSG:32636 UTM Zone 36N</strong></li>
+        </ul>
+        <p>If you only remember one habit from this week: a permanent reprojection is proven by reopening in a fresh project and reading the CRS and units yourself.</p>
+
+        <h2>5) Area in Square Metres — the Field Calculator and <code>$area</code></h2>
+        <p>With the parks layer in metres, area finally makes sense. We opened the <strong>attribute table</strong>, entered editing mode, opened the <strong>Field Calculator</strong>, created a new field <strong><code>area</code></strong>, and set its expression to:</p>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">$area</pre>
+        <p><code>$area</code> returns the area of each polygon <strong>in the layer's CRS units</strong>. Because the layer is now UTM 36N, that answer is in <strong>square metres</strong> — exactly what a land manager needs.</p>
+        <p><em>Tip:</em> use <code>round($area, 2)</code> for cleaner, report-friendly numbers. And remember — <code>$area</code> is only meaningful after the reprojection in step 3; run it on a degrees layer and you get nonsense.</p>
+        <p>We saved the edits, wrapped up with a recap, and answered questions on the open floor.</p>
+
+        <h2>What We Did Live — Scrub Guide</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Welcome &amp; this week's mission</strong> — degrees to metres, and creating data from scratch</li>
+            <li><strong>Live demo (screen share)</strong> — digitizing a new LineString + Polygon layer (Layer → Create Layer, path + table + CRS + fields)</li>
+            <li><strong>Layer re-projection</strong> — WGS84 to UTM 36N in metres (Vector → Data Management → Reproject Layer)</li>
+            <li><strong>Adding the "Area Field"</strong> — Field Calculator, <code>$area</code>, square metres in the parks attribute table</li>
+            <li><strong>Recap &amp; deliverable</strong> — fresh-project check: EPSG:32636, metres on the status bar</li>
+        </ul>
+        <p>Minutes are better spent clicking QGIS live than re-reading theory. Replay the demo at 1.25x if you missed a click.</p>
+
+        <h2>Common Hang-ups and Fixes</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Still reading degrees after reproject:</strong> you are looking at the original WGS84 layer. Find the <em>new</em> reprojected layer and check its CRS — it should say EPSG:32636.</li>
+            <li><strong><code>$area</code> gives tiny or fractional values:</strong> the layer is still in WGS84 degrees. Run the reprojection first, then calculate <code>$area</code>.</li>
+            <li><strong>The path "already exists":</strong> you are reusing a layer/table name from an earlier try. Save to a new name or folder.</li>
+            <li><strong>Fields missing after creation:</strong> attributes can be added any time — open the attribute table → Field Calculator, or add a column in the layer properties.</li>
+        </ol>
+
+        <h2>What You Should Have Now</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Week 1 project reopened — data still in WGS84 degrees</li>
+            <li>Two new digitized layers: <strong>LineString</strong> (linear) + <strong>parks</strong> (polygon), each with its own set of attribute fields</li>
+            <li><strong>Permanent</strong> reprojected copies in <strong>UTM Zone 36N (EPSG:32636)</strong>, units = <strong>metres</strong></li>
+            <li>Proven in a fresh QGIS project: coordinates read in metres, CRS = EPSG:32636</li>
+            <li><strong><code>area</code></strong> field in the parks attribute table, filled by <strong><code>$area</code></strong> in square metres</li>
+            <li>Deliverable screenshot posted to WhatsApp <strong>Course_Helpers</strong></li>
+        </ul>
+        <p>This is Project 1B. One quiz plus one practical lab — graded.</p>
+
+        <h2>Chapters (from the recording — 24:20)</h2>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">00:01:15  Welcome &amp; this week's mission
+00:02:00  Live demo - Digitizing a new Line &amp; Polygon layer
+00:11:20  Layer Re-projection from WGS84 to UTM 36N in metres
+00:21:45  Adding the "Area Field" in the parks layer (Field Calculator, $area)
+00:24:19  Recap &amp; the week's deliverable</pre>
+
+        <h2>What's Next</h2>
+        <p><strong>Week 3 — Cadastral Boundary Mapping &amp; Topology (Project 2):</strong> we move from drawing features to making them <em>correct</em> — land parcels, topology checks, and boundaries that behave. Bring your parks and LineString layers in UTM 36N. <em>Every Sunday 9:45 a.m.</em></p>
+
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Video: <a href="https://youtu.be/sCckj50_T30" target="_blank" rel="noopener">Week 2 on YouTube</a> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Full publish kit in <code>recordings/zoom_recordings/02_WEEK2/</code></p>
+
+        <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

@@ -21,6 +21,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://saltco.org/blog-week2-permanent-metric-transformation.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://saltco.org/blog-week1-field-data-import.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

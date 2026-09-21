@@ -5,7 +5,13 @@
     <link>https://saltco.org/</link>
     <description>Open-source geospatial AI education. Learn GIS, Python, and AI with tools that run offline.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 13 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 20 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Applied Spatial Analysis Using QGIS - Permanent Metric Transformation</title>
+      <link>https://saltco.org/blog-week2-permanent-metric-transformation.html</link>
+      <description>Week 2 (Project 1B): create data from scratch — a LineString and a parks polygon layer digitized in QGIS — then permanently reproject from WGS84 to UTM Zone 36N (EPSG:32636) and compute real areas in square metres with the Field Calculator and $area.</description>
+      <pubDate>Sun, 20 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Applied Spatial Analysis Using QGIS - Field Data Import &amp; Contextualization</title>
       <link>https://saltco.org/blog-week1-field-data-import.html</link>
