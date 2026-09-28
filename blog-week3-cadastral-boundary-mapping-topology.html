@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Cadastral Boundary Mapping &amp; Topology — saltco</title>
+    <meta name="description" content="Week 3 — Applied Spatial Analysis Using QGIS - Cadastral Boundary Mapping &amp; Topology (Project 2): cadastral vs topographic, shared property boundaries, snapping and topological editing, the Attribute Form, and a clean QGIS Topology Checker run with no gaps and no overlaps in EPSG:32636.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">September 2026 — Week 3 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Cadastral Boundary Mapping &amp; Topology</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 27 Sep 2026 · 37:42 · <a href="https://youtu.be/REPLACE_WEEK3_VIDEO_ID" target="_blank" rel="noopener">Watch on YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Do live (this session):</strong> reopen last week's project → create three layers in one GeoPackage (<code>parcels</code>, <code>pipeline_network</code>, <code>valves</code>) → build the Attribute Form → set snapping up <em>before</em> digitizing → draw neighbouring parcels sharing one boundary → run the Topology Checker.<br>
+            <strong>Data:</strong> new <code>Sudan_Cadastral_Database.gpkg</code> + hillshade (or <code>admin2_districts</code>) digitizing guide &nbsp;|&nbsp; <strong>Deliverable (graded):</strong> a topology-checked <code>parcels</code> layer — valid polygons, no gaps, no overlaps — in <strong>UTM Zone 36N (EPSG:32636)</strong>; screenshot of the clean checker result to WhatsApp <code>Course_Helpers</code>.
+        </div>
+
+        <p>I write this after every live session — so students who lost power or signal can catch up in minutes, and so our community has a searchable archive for the future. Week 1 we brought data in. Week 2 we created data and made it measurable. This week we made it <strong>correct</strong>.</p>
+
+        <p>This week's one question: <strong>"My map looks fine — so what makes it wrong?"</strong></p>
+
+        <h2>Why Week 3 Exists</h2>
+        <p>A map can look perfect and still be legally worthless. Two neighbours share one boundary; you draw it twice, 2 cm apart, and you have just created an overlap — and now your map disagrees with the deed. Cadastral mapping is the discipline of not doing that.</p>
+        <p>The plan, live on screen:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Settle the theory — <strong>cadastral vs topographic</strong>: same land, different intent</li>
+            <li>Open last week's project, then <strong>Save As</strong> under this week's name</li>
+            <li>Create <strong>3 layers</strong> in one GeoPackage: <code>parcels</code>, <code>pipeline_network</code>, <code>valves</code></li>
+            <li>Build the <strong>Attribute Form</strong> (widgets + Value Map) so entry is fast and cannot be typed wrong</li>
+            <li>Set <strong>snapping up BEFORE digitizing</strong> — the habit the whole week rests on</li>
+            <li>Digitize parcels that share <strong>one</strong> boundary, then run the <strong>Topology Checker</strong></li>
+            <li>Digitize the pipeline section by section, check it, then place <strong>valves on the intersections</strong></li>
+        </ol>
+
+        <h2>1) Cadastral vs Topographic — Same Land, Different Intent</h2>
+        <p>This is the question everyone asks, so we settled it first. Both kinds of survey are <strong>measuring aspects of land</strong> — natural features and man-made ones. Both can put a pipeline or a building on the map.</p>
+        <p>What separates them is <strong>not the subject matter. It is the intent of the map, and the purpose behind it.</strong></p>
+        <p><strong>Cadastral = legal.</strong> It answers <em>"who owns what, and exactly where is the line?"</em></p>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "The cadastral survey is about the legal aspect of the land."<br>
+            "A legal map, bound by the laws… we have to show it to a real estate, we show it with our transactions, we will provide the rights."
+        </blockquote>
+        <p>It is bound by <strong>property rights</strong> and property law, it <strong>defines a parcel</strong>, and it is tied to the government authority that holds the land registry. Two neighbours, one common line, and the line is the product.</p>
+        <p><strong>Topographic = descriptive.</strong> It answers <em>"what is physically out there?"</em></p>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "We're not controlling… our man-made features, the growths, pipeline, sewer lines, like buildings. You name all this, goes to the topographic survey."<br>
+            "Engineering work, they don't care about the legal."
+        </blockquote>
+        <p>Natural and man-made features both belong here — roads, buildings, pipelines, water. And it carries <strong>no legal weight</strong>. The fastest way to tell which one you are holding: <em>if it went to court, would the court accept it?</em> Only the cadastral map survives that question.</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.5rem 0 1rem; background: var(--light); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"></th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Cadastral</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Topographic</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Purpose</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Legal ownership + rights</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Physical description</strong></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Key question</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Who owns what, and where exactly is the line?</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">What is actually there?</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Authority</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Land registry / government</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">None — descriptive only</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Main output</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">A <strong>parcel</strong>, its boundary, its owner</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Features and terrain</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem;"><strong>Used in court</strong></td>
+                    <td style="padding: 0.5rem 0.75rem;"><strong>Yes</strong></td>
+                    <td style="padding: 0.5rem 0.75rem;">No</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2) Why Boundaries and Topology Are the Whole Point</h2>
+        <p>In cadastral work the <strong>boundary is the product</strong>. Not the colour, not the label — the line. So the rules are non-negotiable:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li><strong>No gaps</strong> between adjacent polygons</li>
+            <li><strong>No overlaps</strong> between adjacent polygons</li>
+            <li><strong>No slivers</strong> and no self-intersections</li>
+            <li>Edges must be <strong>coherent inside the layer</strong> <em>and</em> consistent with the other layers</li>
+        </ul>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "Every point is snapped to the other point in the same layer, on the other layers. Because this is how topology — for integrity between the features themselves in one layer, or with the relation to the other layer."<br>
+            "If you have any prior, your data set, special parts of polygons, it's not closed, there's a gap, there's some slivers, somewhere. You're not able to control all of the analysis correctly."
+        </blockquote>
+        <p>That is what topology buys you. Two neighbours drawing the same 5 m boundary with snapping <strong>on</strong> produce one edge. With snapping <strong>off</strong> they produce two edges that disagree — and neither one is your map's problem, it is a legal problem.</p>
+
+        <h2>3) Open Last Week's Project — and Save It As Today</h2>
+        <p>We opened the Week 2 project, then used <strong>Save As</strong> to give the session its own file. Nothing we do this week can damage last week's work. Do this every week for the rest of the course: a graded project you overwrote by accident is a week you repeat.</p>
+
+        <h2>4) Three Layers, One GeoPackage</h2>
+        <p>We built three layers for one realistic job — a piece of land with a pipe network running across it:</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.5rem 0 1rem; background: var(--light); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Layer</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Geometry</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">What it holds</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>parcels</code></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Polygon</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">the land plots, and who owns them</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>pipeline_network</code></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>LineString</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">the pipe network, section by section</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem;"><code>valves</code></td>
+                    <td style="padding: 0.5rem 0.75rem;"><strong>Point</strong></td>
+                    <td style="padding: 0.5rem 0.75rem;">the valves sitting on that network</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>All three went into <strong>one GeoPackage</strong>, not shapefiles. A GeoPackage is modern, keeps everything in <strong>one file</strong>, and has no <strong>10-character column-name limit</strong> — which is quiz question 3 for a reason. One setting that matters before you draw anything: make sure the layer CRS is <strong>metres</strong> — <em>"Make sure meters because we need to calculate the area right."</em></p>
+
+        <h2>5) The Attribute Form — Stop Typing, Start Choosing</h2>
+        <p>This was the biggest workflow upgrade of the week, and the first time we used it in the course:</p>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "We didn't do this for the last few weeks. We didn't do the same thing. So by now you have to master this."
+        </blockquote>
+        <p>Right-click the layer in the Layers panel → <strong>Attribute Form</strong> (or set it in the layer's <em>Attributes Form</em> settings). The settings that earned their keep:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li><strong>Auto generate → Drag and drop.</strong> You drag fields into the form instead of hand-building it. It also keeps the field list and the form layout in step.</li>
+            <li><strong>Widget Display.</strong> Choose the widget per field — a text box, a dropdown, a range, a date picker.</li>
+            <li><strong>Value Map.</strong> Give a field a fixed list of allowed values, so the person filling the form picks instead of typing.</li>
+            <li><strong>Form Layout → Range.</strong> Constrain a numeric field (start at 1, step up) so nobody types 400 by accident.</li>
+            <li><strong>Constraints → Not null.</strong> A required value cannot be left blank.</li>
+        </ul>
+        <p>And the reason to bother with any of it:</p>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "This is for speeding up. <strong>I'm minimizing your errors</strong> while you typing in."
+        </blockquote>
+        <p>A dropdown cannot produce "Pvimc" when you meant PVC. That single change is worth more than it looks.</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.5rem 0 1rem; background: var(--light); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Layer</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Fields</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>parcels</code></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>owner</code>, <code>surveyed_by</code>, <code>surveyed_date</code>, <code>remarks</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>pipeline_network</code></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>pipe_size</code>, <code>type</code> (PVC / steel / …), <code>status</code> (active / inactive), <code>pipe_ID</code>, <code>surveyed_by</code>, <code>surveyed_date</code>, <code>remarks</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem;"><code>valves</code></td>
+                    <td style="padding: 0.5rem 0.75rem;"><code>type</code> (gate / butterfly / through), <code>status</code>, <code>surveyed_by</code>, <code>surveyed_date</code>, <code>remarks</code></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Three details worth copying into your own project:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li><strong><code>surveyed_by</code> used a Value Map with groups.</strong> You pick the group first, then the person inside it. A long crew list stays manageable, and the value is still constrained.</li>
+            <li><strong><code>surveyed_date</code> got a "Now" button.</strong> The timestamp is captured for you instead of typed — <em>"We track every change in the database to the second."</em></li>
+            <li><strong>Not null and min/max were switched on</strong>, so a required value physically cannot be left empty.</li>
+        </ul>
+
+        <h2>6) Styling — Make It Visible Before You Draw It</h2>
+        <p>Before any digitizing we styled all three layers so they could actually be seen and clicked: parcels as a solid fill, the pipeline as a thick line, the valves as obvious points. Digitizing an invisible feature is guesswork.</p>
+
+        <h2>7) Snapping — Set It Up BEFORE You Digitize</h2>
+        <p>This is the single most important habit of the week, and the instructor was blunt about it:</p>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "This is very critical on a special cadastral survey."
+        </blockquote>
+        <p><strong>Project → Snapping Options</strong> (or the magnet on the digitizing toolbar). Turn on:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li>Snapping to <strong>vertices</strong> — the essential one for shared boundaries</li>
+            <li>Snapping to <strong>segments</strong> — needed for lines and pipes</li>
+            <li>A <strong>tolerance</strong> big enough to grab the shared vertex, small enough to stay honest</li>
+        </ul>
+        <p>The rule that saves the whole week: <strong>set snapping up first, then digitize.</strong> If you draw first and snap afterwards, you have already created the exact gaps and overlaps that topology exists to prevent — and you will fix them by hand, feature by feature, instead of never making them.</p>
+
+        <h2>8) Digitizing the Parcels — One Shared Line</h2>
+        <p>We selected the <code>parcels</code> layer, toggled <strong>editing</strong>, and drew the first parcel. Then the second one <strong>started on the same snapped vertices</strong> as the first — <em>"But in this house it has to be a common line between them."</em> Right-click inside the finished polygon and the Attribute Form from step 5 opens — <code>owner</code>, <code>surveyed_by</code>, <code>surveyed_date</code>, <code>remarks</code> — then save. The boundary is stored <strong>once</strong>, shared by both parcels. Exactly what a cadastre does.</p>
+
+        <h2>9) Topology Checker — The Rules and the Verdict</h2>
+        <p>The <strong>Topology Checker</strong> is the tool that proves it. We set the rules explicitly rather than accepting defaults:</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.5rem 0 1rem; background: var(--light); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Layer</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Rule set</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>parcels</code> (polygons)</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Must not have gaps</strong> + <strong>Must not overlap</strong></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>pipeline_network</code> (lines)</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Must not have gaps</strong> / must not have unexpected dangles</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem;"><code>valves</code> (points)</td>
+                    <td style="padding: 0.5rem 0.75rem;">rule added to check the network junctions</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Then we ran validation on the parcels and got <strong>no errors</strong> — and the important part is <em>why</em>:</p>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "No errors. Why no errors? Because we use the snap and we snap right on the edges."
+        </blockquote>
+        <p>That is the payoff of step 7. Clean topology is not luck, it is the visible result of correct settings. If your checker reports errors, go back to snapping, not to the checker.</p>
+
+        <h2>10) The Pipeline — Section by Section, and Why the Dangles Stay</h2>
+        <p>We drew the network as <strong>separate sections</strong>, one at a time, start point to end point, with each end snapping onto the previous:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li><strong>Section 1</strong> — PVC connection, size 75, <code>pipe_001</code>, active, surveyed_by group 1</li>
+            <li><strong>Section 2</strong> — PVC connection, size 75, <code>pipe_002</code>, active, surveyed_by group 2</li>
+            <li><strong>Section 3</strong> and onward — same pattern, each its own feature and its own attributes</li>
+        </ul>
+        <p>We ran the checker again. The result was clean, and the <strong>dangles at the ends of the pipeline were left deliberately</strong>.</p>
+        <p>This is the nuance worth understanding rather than just copying: a <strong>dangle</strong> is a line endpoint that touches nothing. A <strong>gap</strong> is two lines that should meet but don't. A pipeline that begins and ends somewhere is <em>supposed</em> to have endpoints — so its end dangles are correct data. A gap between two sections that should be joined is a genuine error. The checker can flag both. It <strong>cannot</strong> tell you which one you meant. Telling the difference is the surveyor's job.</p>
+
+        <h2>11) The Valves — Sitting Exactly on the Intersections</h2>
+        <p>Then we placed <strong>four valves</strong> on the pipeline intersections, snapped to the line:</p>
+        <blockquote style="border-left: 4px solid var(--accent, #4CAF50); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--light); color: var(--dark);">
+            "You go zoom in, you see this right on top of the valve… right on top of the pipe, so it's not in the air or not in the space."<br>
+            "The trick here is you have to create each section by itself from start to start, and that's where the valve is."
+        </blockquote>
+        <p>Types recorded: <strong>gate</strong>, <strong>butterfly</strong>, <strong>through</strong>. Saved out of edit mode and ran the topology check across all three layers — parcels clean, pipeline clean, valves clean. The habit to steal: <strong>always zoom in and verify the valve is on the pipe.</strong> A point placed without snapping sits in empty space, and nothing in the attribute table will tell you so.</p>
+
+        <h2>12) Recap — the Five-Step Version</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Set up the layers and the Attribute Form first</strong> — decide your fields before you draw anything</li>
+            <li><strong>Turn snapping on BEFORE digitizing</strong> — vertices plus segments</li>
+            <li><strong>Draw the shared boundary ONCE</strong>, and start the neighbour on those same vertices</li>
+            <li><strong>Set the topology rules, then run the checker</strong> — no gaps, no overlaps on polygons</li>
+            <li><strong>Zoom in and prove the valves sit on the pipes</strong></li>
+        </ol>
+        <p>Minutes are better spent clicking QGIS live than re-reading the theory. Replay the demo at 1.25x if you missed a click.</p>
+
+        <h2>Common Hang-ups and Fixes</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>The checker reports gaps or overlaps on the parcels:</strong> snapping was off, or its tolerance too small, when you drew. Re-draw the shared edge with snapping on — or fix the vertices by hand, then re-run.</li>
+            <li><strong>A valve "floats" above the pipe:</strong> you placed the point without snapping to the pipeline layer. Enable snapping to the segment and re-place it. Zoom in to confirm.</li>
+            <li><strong>The attribute form shows a free-text box when you expected a dropdown:</strong> <em>Auto generate</em> is still on <strong>Basic</strong>. Switch it to <strong>Drag and drop</strong>, then set the widget under <strong>Widget Display</strong>.</li>
+            <li><strong>A pipeline section will not snap to the one before it:</strong> the sections are in different layers, or snapping is limited to vertices and you need <strong>segments</strong> as well.</li>
+            <li><strong>Dangles flagged — do I care?</strong> for a network, end dangles are normal and correct. <strong>Gaps and overlaps are never acceptable.</strong> Know which one you are looking at before you "fix" it.</li>
+            <li><strong>The project from last week is gone:</strong> you digitised without doing <strong>Save As</strong>. Reopen the previous file and redo it — which is exactly why Save As is step one of every week.</li>
+        </ol>
+
+        <h2>What You Should Have Now</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem; color: var(--dark);">
+            <li>Week 2 project reopened and <strong>re-saved</strong> under this week's name</li>
+            <li>One GeoPackage with <strong>three layers</strong>: <code>parcels</code> (polygon), <code>pipeline_network</code> (line), <code>valves</code> (point)</li>
+            <li><strong>Attribute Form</strong> configured on all three: drag-and-drop layout, Value Map dropdowns, range + not-null constraints, and <code>surveyed_date</code> with a "Now" button</li>
+            <li><strong>Snapping</strong> configured (vertices + segments, sensible tolerance) — set up <em>before</em> digitizing</li>
+            <li><strong>Parcels</strong> digitized so the shared boundary is a single edge, attributes entered through the form</li>
+            <li><strong>Topology Checker</strong> rules set: parcels = no gaps + no overlaps; pipeline = no gaps; valves checked</li>
+            <li><strong>Validation run clean</strong> on all three layers</li>
+            <li><strong>Four valves</strong> sitting on the pipeline intersections, snapped onto the lines</li>
+            <li>Screenshot of the clean Topology Checker result posted to WhatsApp <code>Course_Helpers</code></li>
+        </ul>
+        <p style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem;"><strong>Naming note.</strong> The graded deliverable for Project 2 is the layer named <code>parcels</code> in <strong>EPSG:32636</strong> — the same name used throughout the live session, the lab guide and the rubric. Keep it exactly that when you submit (right-click the layer → <em>Rename</em>, or rename the table inside the GeoPackage) so your file matches what is being marked.</p>
+
+        <h2>Chapters</h2>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">00:00  Welcome &amp; this week's mission
+03:05  Cadastral vs topographic - legal vs natural &amp; man-made
+08:45  Boundaries, property lines &amp; why topology
+09:26  Open last week's project + save it as today
+12:31  Create 3 layers - parcels, pipeline network, valves
+13:00  Attribute Form - widgets, drag-and-drop &amp; Value Map
+20:12  Valves layer, field constraints &amp; styling
+22:50  Snapping - set it up BEFORE you digitize
+26:00  Digitizing parcels - one shared boundary
+29:04  Topology Checker - the rules &amp; the verdict (no errors)
+30:40  Digitizing the pipeline, section by section
+33:54  Pipeline topology, dangles &amp; placing the valves
+36:19  Recap, the deliverable &amp; what's next</pre>
+
+        <h2>What's Next</h2>
+        <p><strong>Week 4 — Attribute Queries, Expressions &amp; Selection Math (Project 3):</strong> we stop drawing and start interrogating the data — attribute tables, SQL expressions, <code>AND</code> / <code>OR</code> / <code>LIKE</code> / <code>IS NULL</code>, filtering and selecting features, then exporting only the rows you need. <em>"Give me every primary road in Sudan — without scrolling 455,000 rows by hand."</em> Bring your three layers from this week; we will query them directly. <em>Every Sunday 9:45 a.m.</em></p>
+
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Video: <a href="https://youtu.be/REPLACE_WEEK3_VIDEO_ID" target="_blank" rel="noopener">Week 3 on YouTube</a> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Previous: <a href="blog-week2-permanent-metric-transformation.html">Week 2 — Permanent Metric Transformation</a> · Full publish kit in <code>recordings/zoom_recordings/03_WEEK3/</code></p>
+
+        <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>
