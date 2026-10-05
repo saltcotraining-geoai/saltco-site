@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Attribute Queries, Expressions &amp; Selection Math — saltco</title>
+    <meta name="description" content="Week 4 — Applied Spatial Analysis Using QGIS - Attribute Queries, Expressions &amp; Selection Math (Project 3): why the attribute table is the real dataset, sorting, field types, the Field Calculator, styling by attribute, the Expression Builder, and the CASE WHEN mistake that costs everyone an hour.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">October 2026 — Week 4 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Attribute Queries, Expressions &amp; Selection Math</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 04 Oct 2026 · 40:56 · <a href="https://youtu.be/OZlf_2bKuU" target="_blank" rel="noopener">Watch on YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Do live (this session):</strong> reopen last week's project → open the <code>pipeline_network</code> attribute table → sort it → read the field types → compute a new field with the Field Calculator → style by <code>status</code> → build <code>"status" = 'active'</code> in the Expression Builder, then type it by hand → finish with <code>CASE WHEN</code>.<br>
+            <strong>Data:</strong> last week's GeoPackage reopened and re-saved — the <code>pipeline_network</code> layer (<code>status</code>, <code>pipe_size</code>, length) &nbsp;|&nbsp; <strong>Deliverable (graded):</strong> a filtered selection driven by your own written expression, plus the styling that shows it on the map — screenshot to WhatsApp <code>Course_Helpers</code>.
+        </div>
+
+        <p>I write this after every live session — so students who lost power or signal can catch up in minutes, and so our community has a searchable archive for the future. Week 1 we brought data in. Week 2 we created data and made it measurable. Week 3 we made it correct. This week we finally <strong>ask it questions</strong>.</p>
+
+        <p>This week's one question: <strong>"My map shows 455,000 roads. How do I get only the ones that matter?"</strong></p>
+
+        <h2>Why Week 4 Exists</h2>
+        <p>Weeks 1-3 got you data on a map that was correct: imported, in metres, and topologically clean. This week is the first time you can <strong>ask the data a question and get an answer</strong>.</p>
+        <p>That sounds small. It is the whole difference between a map and an analysis. A layer with 455,000 roads is not information — it is a picture of a problem. The moment you can write down "give me the ones that matter", you have analysis.</p>
+        <p>The plan, live on screen:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Settle what the attribute table actually is — and why it is the real dataset behind the map</li>
+            <li>Open last week's project, then <strong>Save As</strong> under this week's name</li>
+            <li>Open the <code>pipeline_network</code> attribute table and read its fields</li>
+            <li><strong>Sort</strong> it, and learn the field types and the functions that come with them</li>
+            <li><strong>Field Calculator</strong> — compute a new field, <code>length (m)</code> for every pipe</li>
+            <li><strong>Style by attribute</strong> so the categories become visible</li>
+            <li>The <strong>Expression Builder</strong>, then <code>"status" = 'active'</code> by hand</li>
+            <li>The lesson that costs everyone an hour once: <strong><code>CASE WHEN</code></strong>, and why you must repeat the field name</li>
+            <li>Where to get bigger data to practise on</li>
+        </ol>
+
+        <h2>1) The Attribute Table Is the Dataset</h2>
+        <p>We opened with the idea that the map is only the picture. Underneath it there is a table, and <strong>the table is the data</strong>. Everything you drew in Weeks 2 and 3 exists in that table as rows.</p>
+        <p>Attribute means <em>a property of the thing</em>. A pipe has a status, a size, a length. A parcel has an owner. A road has a class and a name. QGIS calls the columns <strong>fields</strong> and the rows <strong>features</strong>. Learn those two words now — every menu in this module uses them.</p>
+
+        <h2>2) Open Last Week's Project — and Save It As Today</h2>
+        <p>Same rule as Week 3: open the Week 3 project, then <strong>Save As</strong> to give this session its own file. A graded project you overwrote by accident is a week you repeat.</p>
+
+        <h2>3) Reading the pipeline_network Table</h2>
+        <p>We worked on the <code>pipeline_network</code> layer from last week, not a fresh dataset. That continuity is deliberate — the layers you built are now the things you query.</p>
+        <p>Opening the table, the first thing we read was <code>status</code>, and the values in it:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>connected</strong></li>
+            <li><strong>disconnected</strong></li>
+            <li><strong>damaged</strong></li>
+        </ul>
+        <p>Then <code>pipe_size</code>. This is the connection back to the Arabic explanation earlier in the session, where we talked about classifying features in the field and how that classification ends up here.</p>
+        <p><strong>The classification you decide in the field is the thing you can filter by later.</strong> If the attribute is missing or spelled two different ways in the field, no expression you write will ever find it.</p>
+
+        <h2>4) Sorting — Free Answers, No Expression Needed</h2>
+        <p>Before any expression, the cheapest possible tool: <strong>sort the table.</strong></p>
+        <p>Click a column header and sort <strong>ascending</strong>, click again for <strong>descending</strong>. That is the whole mechanism. We sorted by status so the categories grouped together.</p>
+        <p>Worth internalising: sorting changes the order rows are <em>drawn and reported in</em>. It does not change which features exist. A sort is a view, not a filter.</p>
+
+        <h2>5) Field Types and Their Functions</h2>
+        <p>We went through the data types you will meet in an attribute table, and each one brings its own functions:</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.5rem 0 1rem; background: var(--light); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Type</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Examples</th>
+                    <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Text</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>status</code>, <code>owner</code>, <code>remarks</code></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">compared with <code>=</code>, always in quotes</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Numeric</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><code>pipe_size</code></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">the only type that takes <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Integer</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">counts, ids</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">no decimal places</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);"><strong>Decimal</strong></td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">measured values</td>
+                    <td style="padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);">precision you set on the field</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem 0.75rem;"><strong>Date</strong></td>
+                    <td style="padding: 0.5rem 0.75rem;"><code>surveyed_date</code></td>
+                    <td style="padding: 0.5rem 0.75rem;">date functions, and <code>now()</code></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>And the functions that ride on them: <strong><code>round()</code></strong>, <strong><code>upper()</code></strong>, <strong><code>lower()</code></strong>, <strong><code>abs()</code></strong>, and <strong><code>length()</code></strong>.</p>
+        <p>A trap worth naming: comparing text to text is <strong>case-sensitive</strong>. <code>'Active'</code> and <code>'active'</code> are different strings, and your filter will silently return nothing. That is what <code>upper()</code> and <code>lower()</code> are for — normalise first, then compare.</p>
+
+        <h2>6) Field Calculator — Let QGIS Compute It</h2>
+        <p>This is the step that turns the table from a record into a calculator. The <strong>Field Calculator</strong> creates a new field and fills it with a computed value, for every feature at once.</p>
+        <p>We computed the <strong>length of each pipe</strong> — new field <code>length (m)</code>, run it, and every feature now carries its own length. We touched <code>area (m²)</code> for polygons and <code>now()</code> for a timestamp.</p>
+        <p>The instructor was emphatic about naming, because a field name is a promise to whoever reads the report:</p>
+        <blockquote style="border-left: 3px solid var(--border); margin: 1rem 0; padding: 0.5rem 0 0.5rem 1rem; color: var(--gray); font-style: italic;">
+            "The project manager... whatever the title, let you confirm the report."
+        </blockquote>
+        <p>So: name the field for the person who will read it, not for the person who typed it. <code>length_m</code> beats <code>fld_3</code>. <code>status</code> beats <code>Field2</code>.</p>
+
+        <h2>7) Style by Attribute — Make the Categories Visible</h2>
+        <p>Attributes you never see on the map are attributes you never use. We styled <code>pipeline_network</code> by <code>status</code>, so connected, disconnected and damaged each got their own colour and you could read the network's health at a glance.</p>
+        <p>Then the practical tip of the session: <strong>save the style and load it again from file.</strong></p>
+        <blockquote style="border-left: 3px solid var(--border); margin: 1rem 0; padding: 0.5rem 0 0.5rem 1rem; color: var(--gray); font-style: italic;">
+            "You have to go through this, go and click <strong>Load Style</strong>... but I definitely want to get it from file."
+        </blockquote>
+        <p>Reusable styles mean you stop rebuilding a colour ramp by hand every week, and every map in a project ends up looking like it belongs to the same report. Save the <code>.qml</code> next to your data.</p>
+
+        <h2>8) The Expression Builder — Then Type It Yourself</h2>
+        <p>The <strong>Expression Builder</strong> is a dialog with three columns: <strong>fields</strong>, <strong>operators</strong>, and <strong>values</strong>. You build the condition by clicking rather than remembering syntax.</p>
+        <p>Then we typed it by hand, because you will not always have the builder:</p>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">"status" = 'active'</pre>
+        <p>Three things to notice, and all three bit during the session:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>The field name in double quotes</strong> — <code>"status"</code></li>
+            <li><strong>The value in single quotes</strong> — <code>'active'</code>. Text values are always quoted. This is the single most common cause of an expression that refuses to run.</li>
+            <li><strong>Double-click the field name</strong> in the table or the builder and it drops into the expression for you — no typing, no spelling mistakes.</li>
+        </ol>
+        <p>Run it, and it returned <strong>exactly one feature</strong>.</p>
+        <blockquote style="border-left: 3px solid var(--border); margin: 1rem 0; padding: 0.5rem 0 0.5rem 1rem; color: var(--gray); font-style: italic;">
+            "It returned one feature. Excellent."
+        </blockquote>
+        <p>Then we selected from the table, filtered from the table, counted what came back, and restyled the selection so it stood out from the rest of the network. Same three moves, three different entry points: map, table, and dialog.</p>
+
+        <h2>9) CASE WHEN — and the Repeating-Field Mistake</h2>
+        <p>This is the part worth bookmarking, because it is the thing everyone gets wrong once.</p>
+        <p>We wanted two categories at once: <code>clean</code> <strong>and</strong> <code>connected</code>. The obvious thing to type is:</p>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">"status" = 'clean' or 'connected'      &lt;-- WRONG</pre>
+        <p>It fails, and the instructor showed exactly why:</p>
+        <blockquote style="border-left: 3px solid var(--border); margin: 1rem 0; padding: 0.5rem 0 0.5rem 1rem; color: var(--gray); font-style: italic;">
+            "When you try to do <code>clean or connected</code>... you have to repeat the field. You cannot only say <code>status</code> equal clean or connected — it's going to scream."
+        </blockquote>
+        <p><strong>Each condition has to be a complete statement of its own.</strong> So the field name is repeated:</p>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">"status" = 'clean' OR "status" = 'connected'</pre>
+        <p>And the tidy way to write it is <code>CASE WHEN</code>:</p>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">CASE
+  WHEN "status" = 'clean'      THEN 'good'
+  WHEN "status" = 'connected'  THEN 'good'
+  ELSE 'other'
+END</pre>
+        <p>Tested, it returned <strong>about eight features</strong>. Then we styled those eight blue to prove the selection and the symbology agree.</p>
+
+        <h2>10) Get Bigger Data and Practise</h2>
+        <p>The last practical step was pointing at where to download <strong>complete Africa and Sudan datasets</strong> — roads, rivers, water bodies, and far more fields than our training pipeline has.</p>
+        <blockquote style="border-left: 3px solid var(--border); margin: 1rem 0; padding: 0.5rem 0 0.5rem 1rem; color: var(--gray); font-style: italic;">
+            "This will allow you to download more data sets for practice and then create your own data sets, go and slice it, and play with the rules — and break it and fix it."
+        </blockquote>
+        <p>That is the right way to learn expressions: break them on purpose. A syntax error you caused deliberately teaches faster than a correct one you copied.</p>
+
+        <h2>11) Recap — the Nine-Step Version</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Save As</strong> your project first, every single week</li>
+            <li><strong>Ask the question first.</strong> Before you filter, be clear: <em>what question are you trying to answer for the client?</em> Your field names and values should already reflect their workflow ("measure twice, cut once").</li>
+            <li><strong>Understand the data model early.</strong> The attribute table is the heart of GIS — what makes GIS different from CAD is that every feature carries its description in a database. Model your features ahead of time and understand the client's datasets and requirements.</li>
+            <li><strong>Build your forms to enforce consistency.</strong> The Value Map in the Attribute Form (from Week 3) is the foundation that keeps your expressions simple and your data clean later.</li>
+            <li><strong>Sort</strong> the table before writing anything — some answers are free</li>
+            <li><strong>Know your field types</strong> — text needs quotes, only numbers take <code>&gt;</code> and <code>&lt;</code></li>
+            <li><strong>Field Calculator</strong> for computed values, and name fields for the report reader</li>
+            <li><strong>Style by attribute</strong>, then save the style to a <code>.qml</code> file so you can reuse it</li>
+            <li><strong>Expressions</strong>: field in <code>"quotes"</code>, value in <code>'single quotes'</code>, and <strong>repeat the field for every <code>OR</code> condition</strong> — or use <code>CASE WHEN</code></li>
+        </ol>
+        <p>And the instructor's own caveat, which is the honest summary of the session:</p>
+        <blockquote style="border-left: 3px solid var(--border); margin: 1rem 0; padding: 0.5rem 0 0.5rem 1rem; color: var(--gray); font-style: italic;">
+            "You get some techniques, but you have to practise, practise, practise to master it. A lot of stuff to be covered — just we touch on the stuff. You have to go and read and practise."
+        </blockquote>
+
+        <h2>What We Did Live — Scrub Guide</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Welcome &amp; this week's mission</strong> — SQL-style expressions, filtering, selection, export</li>
+            <li><strong>The agenda</strong> — attribute table, selection, filtering, subsetting, export</li>
+            <li><strong>Why attribute tables matter</strong> — "measure twice, cut once"; GIS vs CAD (the database under the map), understand client workflow and data model first</li>
+            <li><strong>Chat check</strong>, open last week's project, save as today</li>
+            <li><strong>The pipeline attribute table</strong> — <code>status</code> values (connected / disconnected / damaged), pipe sizes</li>
+            <li><strong>Filter, select &amp; export</strong> — the core idea (GUI first)</li>
+            <li><strong>Sorting</strong> — ascending and descending; <strong>field types</strong> — text, numeric, integer, decimal, date</li>
+            <li><strong>Field Calculator</strong> — <code>length (m)</code> per pipe, plus <code>area (m²)</code> and <code>now()</code></li>
+            <li><strong>Styling by status</strong> — load a style from file, reuse the <code>.qml</code>, and use Value Maps / consistency from Week 3</li>
+            <li><strong>The Expression Builder</strong> — fields, operators, values</li>
+            <li><strong>Building the expression</strong> — field in double quotes, value in single quotes, double-click to insert</li>
+            <li><strong><code>"status" = 'active'</code></strong> — returns 1 feature; select, filter, count, restyle</li>
+            <li><strong>Downloading practice datasets</strong> — full Africa and Sudan layers</li>
+            <li><strong><code>CASE WHEN</code></strong> — two conditions, the repeating-field rule, returns 8 features, styled blue</li>
+            <li><strong>Recap</strong> — next week buffers and spatial operations</li>
+        </ul>
+
+        <h2>Common Hang-ups and Fixes</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>The expression will not run and you cannot see why:</strong> almost always a quoting error. Field names take <code>"double quotes"</code>, text values take <code>'single quotes'</code>. Numbers take neither.</li>
+            <li><strong><code>OR</code> returns nothing or errors:</strong> you dropped the field name from the second condition. Write <code>"status" = 'clean' OR "status" = 'connected'</code>, or use <code>CASE WHEN</code>.</li>
+            <li><strong>A filter returns zero rows but you can see the features:</strong> case sensitivity. <code>'Active'</code> will not match <code>'active'</code>. Wrap the field in <code>lower()</code> and compare against lowercase.</li>
+            <li><strong>You compared a text field with <code>&gt;</code> or <code>&lt;</code>:</strong> only numeric fields support ordering comparisons. <code>pipe_size</code> yes, <code>status</code> no.</li>
+            <li><strong>The Field Calculator result is all zeros or all null:</strong> the field already existed with a fixed width, so the values did not fit. Widen the field, or create a fresh one.</li>
+            <li><strong>You want only the selected features as a new layer:</strong> export the selection, don't export the layer — the whole layer is the default.</li>
+            <li><strong>Your styling disappeared in the next project:</strong> you never saved the style to a <code>.qml</code> file.</li>
+        </ol>
+
+        <h2>What You Should Have Now</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Week 3 project reopened and <strong>re-saved</strong> under this week's name</li>
+            <li>The <code>pipeline_network</code> <strong>attribute table</strong> open and understood: fields, types, and the <code>status</code> categories</li>
+            <li>The table <strong>sorted</strong> ascending and descending on a field of your choice</li>
+            <li>A <strong>new computed field</strong> from the Field Calculator — <code>length (m)</code> per pipe is the one we did</li>
+            <li>The layer <strong>styled by <code>status</code></strong>, with the style saved to a <code>.qml</code> file you can reuse</li>
+            <li><code>"status" = 'active'</code> written, run and understood — <strong>1 feature</strong></li>
+            <li><code>CASE WHEN "status" = 'clean' OR "status" = 'connected' ... END</code> written and run — <strong>8 features</strong> — and the selection styled to prove it</li>
+            <li>A note of where to download bigger Africa/Sudan datasets to practise on</li>
+        </ul>
+        <div style="background: var(--light); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin: 1.5rem 0;">
+            <p style="margin-top: 0;"><strong>One note on the demo layer, and why.</strong> This session deliberately taught the technique on the <code>pipeline_network</code> layer we built last week, rather than retyping your lab's roads query on screen. The point was the <em>method</em> — sorting, field types, Field Calculator, the repeating field name with <code>OR</code>, and <code>CASE WHEN</code> — on data you already know.</p>
+            <p>Your brief still asks for <code>Filtered_Primary_Roads.gpkg</code> from <code>roads.gpkg</code> (filter <code>fclass = 'primary'</code>), and <strong>build exactly what your brief asks for</strong>. You are not meant to copy my pipe example into your submission; you are meant to apply the technique to the dataset in your lab drive. The skills are identical — only the target layer and field name change. And the primary roads you filter are also the input that Week 5 buffers by 50 m for Project 4A.</p>
+        </div>
+        <p>This is Project 3. One quiz plus one practical lab — graded.</p>
+
+        <h2>Chapters (from the recording — 40:56)</h2>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">00:00  Welcome &amp; this week's mission
+06:10  The agenda — attribute table, selection, filtering &amp; export
+09:00  Chat check, open last week's project &amp; save as today
+09:30  The pipeline attribute table — fields, status &amp; pipe size
+15:26  Filter, select &amp; export — the core idea
+17:00  Sorting the table &amp; the field types
+19:00  Field Calculator — each pipe's length
+22:08  Styling by status — loading a style from file
+31:00  The Expression Builder
+32:00  Building the expression — field, operator &amp; quotes
+34:30  "status" = 'active' — selection, filtering &amp; counting
+36:30  Downloading more practice datasets
+38:00  CASE WHEN — two conditions &amp; styling the result
+40:00  Recap &amp; next week — buffers in Week 5</pre>
+
+        <h2>What's Next</h2>
+        <p><strong>Week 5 — Spatial Proximity &amp; Multi-Criteria Analysis (Project 4A):</strong> we stop asking questions of <em>rows</em> and start asking them of <em>space</em>. Buffer the primary roads at 50 m, clip the buildings inside the zone, and compute the affected area in m² and hectares. <em>"How many buildings fall inside a 50 m no-build setback from primary roads?"</em> Bring your layers from this week — the queries you wrote today decide what goes into the buffer. <em>Every Sunday 9:45 a.m.</em></p>
+
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Video: <a href="https://youtu.be/OZlf_2bKuU" target="_blank" rel="noopener">Week 4 on YouTube</a> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Previous: <a href="blog-week3-cadastral-boundary-mapping-topology.html">Week 3 — Cadastral Boundary Mapping &amp; Topology</a> · Full publish kit in <code>recordings/zoom_recordings/04_WEEK4/</code></p>
+
+        <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>
