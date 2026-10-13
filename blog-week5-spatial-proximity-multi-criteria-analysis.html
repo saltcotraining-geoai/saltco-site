@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Spatial Proximity & Multi-Criteria Analysis — saltco</title>
+    <meta name="description" content="Week 5 — Spatial Proximity & Multi-Criteria Analysis: Study Area, Clip, Buffer, Spatial Join to identify impacted buildings. UTM metres, data prep first.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing & Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">October 2026 — Week 5 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Spatial Proximity & Multi-Criteria Analysis</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 11 Oct 2026 · 45:08</em></p>
+<h1>Applied Spatial Analysis Using QGIS - Week 5 Spatial Proximity & Multi-Criteria Analysis</h1>
+<p><strong>Course:</strong> Applied Spatial Analysis Using QGIS - 2026 Cohort (GIS for Surveyors)</p>
+<p><strong>Session:</strong> Week 5 of 9 - 11 Oct 2026 (45:08)</p>
+<p><strong>Video:</strong> Week 5 - Spatial Proximity & Multi-Criteria Analysis to YouTube playlist Applied Spatial Analysis Using QGIS - Live Sessions and Labs</p>
+<p><strong>Data:</strong> roads, rivers/water bodies, buildings, admin layers from training_utm36n (UTM 36N)</p>
+<p><strong>Deliverable:</strong> buildings in proximity zone identified via buffer + spatial join (e.g. buildings_in_road_buffer with affected_m2 and affected_ha as per lab guide)</p>
+<p>Digital archive note - I write this after every live session so students who missed power or signal can catch up offline, and so our community has a searchable record for the future.</p>
+<p>---</p>
+<h2>Why Week 5 Exists</h2>
+<p>Week 4 taught us to ask questions of attribute data. Week 5 is where we start asking questions about <strong>location and distance</strong> - spatial relationships. How many buildings fall within a 50 m no-build setback from roads? Which buildings would be impacted if a water body flooded to 100 m? These are classic spatial analysis questions.</p>
+<p>The plan, live on screen:</p>
+<p>1. Recap the importance of data readiness before analysis</p>
+<p>2. Create and use a <strong>Study Area</strong> boundary</p>
+<p>3. <strong>Clip</strong> all relevant layers to the study area (normalize and improve performance)</p>
+<p>4. Understand <strong>Buffer</strong>, <strong>Clip</strong>, <strong>Overlay</strong> (Intersection/Union), <strong>Spatial Join</strong></p>
+<p>5. Apply buffers to roads (filtered by expression) and water bodies</p>
+<p>6. Use <strong>Spatial Join</strong> to identify impacted vs unimpacted buildings</p>
+<p>7. Wrap up with deliverable and next steps</p>
+<h2>1) Data Preparation First</h2>
+<p>Before running spatial analysis, datasets must be prepared. We emphasized: ensure you have all needed datasets before framing questions; normalize through selection/filtering/reprojection; create a Study Area; then clip every layer to that boundary. Clipping makes datasets manageable and improves QGIS performance.</p>
+<h2>2) Study Area & Clipping</h2>
+<p>We created a Study Area polygon, styled it clearly, then used <strong>Vector → Geoprocessing → Clip</strong> (also accessible via Processing Toolbox and Locator) to cut roads, rivers/water bodies, and buildings to the study area boundary. After clipping, original full-extent layers were removed from the layer stack and replaced with subset layers.</p>
+<h2>3) Buffers and Expressions</h2>
+<p>Buffers create proximity zones. We filtered roads using an SQL expression to extract <strong>main roads</strong> (primary/secondary/tertiary), exported as <code>main_roads</code>, styled and labelled. We then ran a <strong>30 m buffer</strong> on main roads. We also applied a <strong>100 m buffer</strong> around water bodies to model a setback/protection zone.</p>
+<h2>4) Spatial Join to Find Impacts</h2>
+<p>The key question posed: "How many buildings were impacted?" Using <strong>Spatial Join</strong> (Join attributes by location), we joined buildings with the 100 m water buffer to identify which buildings fell within or touched the buffer zone. This produced <code>building_impacted_buff100</code>. We also inverted/selected the remainder to export <code>buildings_unimpacted_buff100m</code>.</p>
+<h2>5) Key Takeaways</h2>
+<li>CRS is critical - work in UTM (metres) for distance-based analysis</li>
+<li>Study Area + Clip normalizes data and improves performance</li>
+<li>Buffer defines proximity; Spatial Join/Intersection quantify what falls inside</li>
+<li>Filtering with expressions (e.g. road class) keeps analysis focused</li>
+<li>Keep your layer stack organized (subsets only after clipping)</li>
+<h2>6) Wrap-up</h2>
+<p>We reviewed results, discussed the week's deliverable context (<code>buildings_in_road_buffer</code> with <code>affected_m2</code>, <code>affected_ha</code>), reminded about the weekly quiz, mentioned raster analysis intro for next week, and closed the session.</p>
+<p>---</p>
+<p><em>Archive created from live session notes and what_we_covered_today.txt</em></p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div>
+            <a class="brand" href="index.html">
+                <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+                <span class="brand-text">
+                    <span class="brand-name">salt<span>co</span></span>
+                    <span class="brand-tagline">Computing &amp; Capacity Building</span>
+                </span>
+            </a>
+            <p class="muted">Practical, hands-on training in free and open source software for real work.</p>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="learning-paths.html">Learning Paths</a>
+            <a href="courses.html">Courses</a>
+            <a href="blog.html">Blog</a>
+            <a href="projects.html">Projects</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="about.html">About</a>
+            <a href="support.html">Support</a>
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.youtube.com/@saltco" target="_blank" rel="noopener">YouTube</a>
+            <a href="feed.xml">RSS</a>
+            <a href="CV.md">CV</a>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>&copy; <span id="year"></span> saltco. All rights reserved.</span>
+    </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/main.js"></script>
+</body>
+</html>
