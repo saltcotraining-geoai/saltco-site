@@ -5,7 +5,19 @@
     <link>https://saltco.org/</link>
     <description>Open-source geospatial AI education. Learn GIS, Python, and AI with tools that run offline.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 04 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 18 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Applied Spatial Analysis Using QGIS - Raster Analysis &amp;amp; Demographic Planning</title>
+      <link>https://saltco.org/blog-week6-raster-analysis-demographic-planning.html</link>
+      <description>Week 6 (Project 4B): pixels to decisions. Reproject the DEM to UTM 36N, clip it to Red Sea state, derive slope and aspect, turn site criteria into a boolean raster with the Raster Calculator, then raster to vector, a dissolved 5 km railway buffer, and an intersection that leaves the best sites over 150 acres.</description>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Applied Spatial Analysis Using QGIS - Spatial Proximity &amp;amp; Multi-Criteria Analysis</title>
+      <link>https://saltco.org/blog-week5-spatial-proximity-multi-criteria-analysis.html</link>
+      <description>Week 5 (Project 4A): Study Area → Clip → Buffer → Spatial Join. Data prep first, filter main roads with expressions, run 30 m/100 m buffers, then use Spatial Join to find impacted vs unimpacted buildings in metres (UTM 36N).</description>
+      <pubDate>Sun, 11 Oct 2026 00:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Applied Spatial Analysis Using QGIS - Attribute Queries, Expressions &amp;amp; Selection Math</title>
       <link>https://saltco.org/blog-week4-attribute-queries-expressions-selection-math.html</link>

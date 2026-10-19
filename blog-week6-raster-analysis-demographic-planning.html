@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Raster Analysis &amp; Demographic Planning — saltco</title>
+    <meta name="description" content="Week 6 — Raster Analysis & Demographic Planning: reproject and clip a DEM, derive slope and aspect, run the Raster Calculator, then buffer, intersect and pick the best sites. UTM 36N.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">October 2026 — Week 6 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Raster Analysis &amp; Demographic Planning</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 18 Oct 2026 · 39:39 · <a href="https://youtu.be/gZYzosMKV1I" target="_blank" rel="noopener">Watch on YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Do live (this session):</strong> reproject the DEM to UTM 36N → clip it to Red Sea state with <strong>Clip Raster by Mask</strong> → style it (pseudocolor + multiply blend) → derive <strong>Slope</strong> and <strong>Aspect</strong> → site criteria into a boolean raster with the <strong>Raster Calculator</strong> → raster to vector + area in the Field Calculator → railway <strong>5 km buffer</strong> (dissolved) → <strong>Intersection</strong> → select the best sites &gt; 150 acres.<br>
+            <strong>Data:</strong> <code>srtm_sudan.tif</code> + hillshade, <code>population_2020_1km.tif</code>, <code>admin2_districts.gpkg</code> (UTM 36N) &nbsp;|&nbsp; <strong>Deliverable (graded):</strong> <code>district_population.gpkg</code> — districts with a population <code>_sum</code> column, <strong>taught live next session</strong>.
+        </div>
+
+        <p>I write this after every live session — so students who lost power or signal can catch up in minutes, and so our community has a searchable archive for the future. Week 4 we asked questions of <em>rows</em>. Week 5, of <em>space</em>. This week we ask questions of <strong>surfaces</strong> — because a raster puts a value in <em>every</em> cell.</p>
+
+        <p>This week's two questions: <strong>"Where can we build?"</strong> and <strong>"How many people does this area serve?"</strong> — elevation under every square metre you might build on, population in every kilometre square you might serve.</p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 6px; padding: 0.75rem 1.25rem; margin: 0 0 1.5rem; font-size: 0.9rem;">
+            <strong>Bilingual session.</strong> The first half (00:00–16:59) is taught in Arabic — the theory, the data sources, why rasters must be reprojected. The live demo from 17:00 is in English. The chapter list below marks the switch.
+        </div>
+
+        <h2>Why Week 6 Exists</h2>
+        <p>Weeks 1–3 got your vector data on the map: imported, in metres, topologically clean. Weeks 4–5 taught you to ask it questions. Rasters are the other half of GIS — a grid where each cell holds a number, elevation or population or temperature. Continuous data lives here, and so do the questions surveyors answer with terrain and demographics.</p>
+        <p>The plan, live on screen:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Recap the vector weeks, then open rasters — pixels, resolution, continuous data</li>
+            <li>Where raster data comes from — imagery, sampling, interpolation, change detection</li>
+            <li>Load the SRTM DEM and the Sudan population raster — and read a single pixel value</li>
+            <li><strong>Reproject</strong> the raster before analysis (exactly like we do with vectors)</li>
+            <li><strong>Clip raster by mask</strong> to a state boundary, then style the result</li>
+            <li>Derive <strong>Slope</strong> and <strong>Aspect</strong> from the DEM</li>
+            <li>Turn site criteria into a boolean raster with the <strong>Raster Calculator</strong></li>
+            <li>Hand it back to vector tools — raster to vector, Field Calculator for area</li>
+            <li>Railway <strong>5 km buffer</strong> → <strong>intersection</strong> → the best remaining sites</li>
+        </ol>
+
+        <h2>1) Raster vs Vector — Pixels and Resolution</h2>
+        <p>A vector stores an object (a parcel, a road). A raster stores a <strong>grid of cells</strong>, each cell holding a number. Zoom in far enough on a raster and you see the truth: the pixel. Different cells carry different values; that is the whole idea.</p>
+        <p>Resolution decides how much detail you keep — a coarse cell is a summary of everything inside it, a fine cell is closer to the ground truth. Continuous data (elevation) and classified data both live in grids.</p>
+
+        <h2>2) Our Data — DEM, Hillshade, Population</h2>
+        <p>Two rasters carry the week:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><code>srtm_sudan.tif</code> — elevation, plus <code>srtm_sudan_hillshade.tif</code> for the shaded relief backdrop</li>
+            <li><code>population_2020_1km.tif</code> — people per 1 km cell, for all of Sudan</li>
+        </ul>
+        <p>We opened the population raster and clicked a cell: <strong>one value per pixel</strong>, the number of people living in that square kilometre. That single click is the whole concept behind "how many people does this district serve?" — you only need a tool that <em>sums the pixels inside a boundary</em>, which is exactly what next session's Zonal Statistics step does.</p>
+
+        <h2>3) Reproject First</h2>
+        <p>Rasters carry a CRS just like vectors, and the rule is the same: <strong>reproject before you measure</strong>. On screen: Raster → Projection → Reproject, target set to the project CRS (UTM 36N), output named <code>..._utm36n</code>. After reprojecting we checked Layer Properties: the CRS is right, the units are metres, and the pixel size came out at <strong>180 m × 180 m</strong> — coarse, but honest about the source data.</p>
+        <p>If you skip this step, every later measurement (slope, area, buffers) is measured in degrees pretending to be metres.</p>
+
+        <h2>4) Clip Raster by Mask</h2>
+        <p>The whole-Sudan DEM is heavy to render, so we cut it down: Raster → Extraction → <strong>Clip Raster by Mask</strong>, mask = the Red Sea state boundary polygon. Two settings matter and both were set on screen: the <strong>input is the raster</strong>, the <strong>mask is a polygon</strong>, and <em>Keep resolution of input raster</em> stays on so the pixel grid does not shift. The result was a small, fast layer that renders instantly — the same discipline as clipping vectors in Week 5.</p>
+
+        <h2>5) Make the DEM Readable</h2>
+        <p>A raw DEM renders as mud. Symbology → <strong>Singleband pseudocolor</strong>, a low-to-high colour ramp, min/max from the data, and <strong>multiply</strong> blending so the hillshade shows through underneath. We then copied the style into the saved project so next session starts with the same picture.</p>
+
+        <h2>6) Slope and Aspect</h2>
+        <p>Processing → Raster Analysis → <strong>Slope</strong> on the clipped DEM: percent, not degrees (the checkbox we ticked). Then <strong>Aspect</strong> — the compass direction each slope faces: 0 north, 90 east, 180 south, 270 west, closing back to 360.</p>
+        <p>Aspect is the tool that answers site questions a surveyor cares about: a solar field wants panels facing roughly 180–270; a glass facade wants the morning sun, not the evening one; and if you want to know why a road and a railway follow a particular valley, read the aspect and elevation either side of them.</p>
+
+        <h2>7) Reading Cells and Terrain</h2>
+        <p>Zooming into the raster shows the cells and their values; transparency on the DEM over the aspect layer lets you see both at once — blue is low, the bright edges are high, the valley is visible. This is the habit to build: <em>look at the numbers before you trust the picture</em>.</p>
+
+        <h2>8) Site Criteria and the Raster Calculator</h2>
+        <p>Now the analysis: pick the conditions, e.g. an aspect band (roughly 22.5–75 for a north-east facing site) <strong>and</strong> a gentle slope (under about 5%). The <strong>Raster Calculator</strong> takes both inputs and writes one expression with two conditions — the result is a <strong>boolean raster</strong>: <code>1</code> = meets both criteria, <code>0</code> = does not.</p>
+        <p>That is SQL thinking applied to a grid, and it is the same true/false logic you met in Week 4, now with a map as the answer.</p>
+
+        <h2>9) Back to Vectors — Raster to Vector and Area</h2>
+        <p>A boolean raster is only a grid, so we converted it: <strong>Raster to vector</strong>, which turns the <code>1</code> cells into polygons. Then the <strong>Field Calculator</strong> added the field that makes the result useful — area, in square metres and acres (an acre is a fixed multiple of m², so compute in metres first, convert second). Now the "suitable land" answer has a size attached to it.</p>
+
+        <h2>10) Railway Buffer → Intersection → Best Sites</h2>
+        <p>The last move reuses Week 5's tools on the new result: a <strong>5 km buffer around the railway</strong> (run with <em>dissolve: yes</em> so the band is one zone, not overlapping rings), then <strong>Intersection</strong> between the suitable-land polygons and that corridor. Finally we selected the patches <strong>larger than 150 acres</strong> — four or five locations — and that is the answer to the siting question: raw raster data in, a shortlist of real sites out.</p>
+
+        <h2>What We Did Live — Scrub Guide</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Welcome &amp; mission</strong> — this is the raster week (Arabic)</li>
+            <li><strong>Raster vs vector</strong> — pixels, resolution, continuous data</li>
+            <li><strong>Where rasters come from</strong> — imagery, sampling, interpolation</li>
+            <li><strong>Why rasters</strong> — change detection across years, crop and desertification monitoring</li>
+            <li><strong>The data</strong> — SRTM DEM and the Sudan population raster; Red Sea state as our scenario</li>
+            <li><strong>Read a pixel</strong> — one value per cell; click and read it</li>
+            <li><strong>Reproject</strong> — target UTM 36N, then verify pixel size (180 m)</li>
+            <li><strong>Clip raster by mask</strong> — Red Sea boundary, keep resolution</li>
+            <li><strong>Style it</strong> — singleband pseudocolor + multiply blend, save the project</li>
+            <li><strong>Slope</strong> — percent vs degrees</li>
+            <li><strong>Aspect</strong> — compass direction, and why roads and railways follow valleys</li>
+            <li><strong>Site criteria</strong> — aspect band + gentle slope</li>
+            <li><strong>Raster Calculator</strong> — two conditions → boolean 1/0</li>
+            <li><strong>Raster to vector</strong> — grid back to polygons</li>
+            <li><strong>Field Calculator</strong> — area in m² and acres</li>
+            <li><strong>Railway 5 km buffer</strong> — dissolve it first</li>
+            <li><strong>Intersection</strong> — suitable land inside the corridor, patches &gt; 150 acres</li>
+            <li><strong>Wrap up</strong> — next session: the population raster</li>
+        </ul>
+
+        <h2>Common Hang-ups and Fixes</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>You set the CRS in Layer Properties and the raster still measures wrong:</strong> that only relabels the layer. Run <strong>Raster → Projection → Reproject</strong> and choose the target CRS — the pixels themselves must move.</li>
+            <li><strong>Clip Raster by Mask returns nothing or the wrong area:</strong> input = raster, mask = polygon, both in the same CRS, and <em>Keep resolution of input raster</em> switched on.</li>
+            <li><strong>The DEM renders as one flat colour:</strong> your min/max are not from the data. Set classification min/max from the layer, use singleband pseudocolor, and blend with the hillshade.</li>
+            <li><strong>Slope looks implausible:</strong> check the unit — degrees and percent differ by more than a factor of two on gentle ground. Tick the percent box if you want the engineering answer.</li>
+            <li><strong>Raster Calculator gives all zeros:</strong> the layer name in the expression must match the <em>layer</em> in the project, both inputs must share the same CRS and grid, and one of your conditions is probably written against the wrong layer.</li>
+            <li><strong>Your output raster vanished when you closed QGIS:</strong> it was a temporary result. Save it to a file when the tool asks — we hit save on screen for exactly this reason.</li>
+            <li><strong>The vector version of your suitability raster has no useful attributes:</strong> Raster to vector carries the grid value only. Add your own field with the Field Calculator and compute <code>$area</code> in metres first, then convert.</li>
+            <li><strong>The railway buffer looks like overlapping rings instead of a corridor:</strong> set <strong>dissolve</strong> to <em>yes</em> before running, otherwise the intersection counts the same ground twice.</li>
+        </ol>
+
+        <h2>What You Should Have Now</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>The DEM <strong>reprojected to UTM 36N</strong>, pixel size checked and understood (180 m)</li>
+            <li>A <strong>clipped, styled</strong> Red Sea DEM (pseudocolor + multiply) with the style saved in your project</li>
+            <li><strong>Slope</strong> and <strong>Aspect</strong> layers derived from it</li>
+            <li>A <strong>boolean suitability raster</strong> from the Raster Calculator — <code>1</code> = meets both site criteria</li>
+            <li>The vector version of those <code>1</code> cells, with an <strong>area field</strong> in m²/acres</li>
+            <li>A <strong>dissolved 5 km railway buffer</strong>, intersected with the suitable land, and the patches <strong>&gt; 150 acres</strong> selected</li>
+            <li>Read a population pixel on screen — the value is there; the summing comes next session</li>
+        </ul>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin: 1.5rem 0;">
+            <p style="margin-top: 0;"><strong>One note on the schedule, and why.</strong> We ran short, and I made a call: the <strong>population half of the mission — Zonal Statistics summing <code>population_2020_1km.tif</code> per district into <code>district_population.gpkg</code> with a <code>_sum</code> column — is taught live next session</strong>, ahead of Week 7's print layouts.</p>
+            <p>What you got today is the complete raster half: reproject, clip, style, slope, aspect, Raster Calculator, back to vectors, buffer, intersect, decide. Do <strong>Steps 1–3 of the Week-6 lab guide now</strong>; the deliverable is due after next Sunday's session, not before this one. The quiz for the week is already open (posted in the chat at the start of the session).</p>
+        </div>
+        <p>This is Project 4B. One quiz plus one practical lab — graded.</p>
+
+        <h2>Chapters (from the recording — 39:39)</h2>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.9rem;">00:00  Welcome &amp; this week's mission — the raster week
+04:00  Rasters vs vectors: pixels, resolution, continuous data
+06:10  Where raster data comes from — imagery, sampling, interpolation
+08:05  Why rasters: change detection &amp; multi-year comparison
+10:05  Our data: SRTM DEM + population raster of Sudan
+13:20  Reading a raster: one value per pixel (population demo)
+15:15  Reproject rasters before analysis, exactly like vectors
+17:00  Live demo: reproject the DEM to the project CRS (UTM 36N)
+18:35  Clip raster by mask — cut the DEM to Red Sea state
+19:30  Styling a DEM: singleband pseudocolor + multiply blend
+21:20  Slope &amp; Aspect from the DEM (Raster Analysis)
+24:30  Reading cells, transparency &amp; terrain on the map
+26:35  Site criteria: which slope and aspect suit a site
+29:12  Raster Calculator: aspect + slope conditions, boolean 1/0
+31:55  Raster to vector &amp; the Field Calculator (area in acres)
+35:35  Railway 5 km buffer — intersection — best sites
+39:00  Wrap up &amp; what comes next</pre>
+
+        <h2>What's Next</h2>
+        <p><strong>Next session — the population raster:</strong> <code>population_2020_1km.tif</code> meets <code>admin2_districts.gpkg</code> through <strong>Zonal Statistics</strong> (Statistic: Sum), and the answer to <em>"how many people live in each district?"</em> lands as <code>district_population.gpkg</code> with a <code>_sum</code> column. Bring today's project — the DEM, the clip, the styling — because it is the same raster discipline, only the question changes.</p>
+        <p><strong>Week 7 — Professional Print Layouts &amp; Atlas (Project 5A):</strong> with the analysis answers in hand, we make them presentable — grid, scale bar, north arrow, legend, and QGIS Atlas generating one sheet per district at 300 DPI.</p>
+
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> YouTube playlist <em>Applied Spatial Analysis Using QGIS — Live Sessions &amp; Labs</em> · Video: <a href="https://youtu.be/gZYzosMKV1I" target="_blank" rel="noopener">Week 6 on YouTube</a> · Course site <a href="https://saltco.org">saltco.org</a> · Software QGIS (free &amp; open source, offline) · Previous: <a href="blog-week5-spatial-proximity-multi-criteria-analysis.html">Week 5 — Spatial Proximity &amp; Multi-Criteria Analysis</a> · Full publish kit in <code>recordings/zoom_recordings/06_WEEK6/</code></p>
+
+        <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    if (toggle) toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>
