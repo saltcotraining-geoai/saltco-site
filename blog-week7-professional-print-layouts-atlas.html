@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Professional Print Layouts &amp; Atlas — saltco</title>
+    <meta name="description" content="Week 7 — Professional Print Layouts & Atlas: turn analysis into a printable map with grids, legend, scale, inset, and generate one sheet per district using the QGIS Atlas. UTM 36N.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">October 2026 — Week 7 of 9</span>
+        <h1>Applied Spatial Analysis Using QGIS - Professional Print Layouts &amp; Atlas</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 25 Oct 2026 · 47:24 · <a href="https://youtu.be/kT7XQvViTMI" target="_blank" rel="noopener">Watch on YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Mission:</strong> A client wants one clean, printable A3 map sheet of each district — with grid and scale.<br>
+            <strong>Live focus:</strong> Print Layout setup (guides), main map + inset, legend/scale bar/north arrow/title, locking the map, then <strong>Atlas</strong> to generate one sheet per district and export as a multi-page PDF at 300 DPI.<br>
+            <strong>Data:</strong> Red Sea layers, <code>admin2_districts</code>, railway/roads/rivers, population from previous class (all in same CRS — UTM 36N) &nbsp;|&nbsp; <strong>Deliverable:</strong> Multi-page PDF, one sheet per district, at 300 DPI.
+        </div>
+
+        <p>Week 6 gave us surfaces — rasters that let us ask where to build and how many people a district serves. Week 7 is the cartographic step: turning all that analysis into a proper, professional map product that can be printed and communicated clearly to a client or decision-maker.</p>
+
+        <p>A good map answers three questions at a glance: <strong>what, where, and when</strong>. That means choosing the right elements, controlling scale and extent, and making the layout readable on paper — not just on screen.</p>
+
+        <h2>Why Week 7 Exists</h2>
+        <p>Up to now we've focused on analysis. The final deliverable in applied GIS is almost always a map. This week we learn the standard workflow:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Set up a clean Print Layout with a logical structure</li>
+            <li>Prepare and lock the main map so it doesn't accidentally pan</li>
+            <li>Add context with an inset map</li>
+            <li>Include essential cartographic elements (grid, scale bar, north arrow, legend, title/subtitle)</li>
+            <li>Add supporting info (attribute table, notes, data sources/credits)</li>
+            <li>Use the <strong>Atlas</strong> to automate one page per district from a coverage layer</li>
+            <li>Export at 300 DPI for printing/sharing</li>
+        </ol>
+
+        <h2>1) Recap — From Rasters to Map Production</h2>
+        <p>We started with a quick recap of the raster work: reading pixels, reprojecting to UTM 36N, clipping, deriving slope/aspect, and using the Raster Calculator with Zonal Statistics context from the previous class. The goal now is to present those results clearly on a printed sheet.</p>
+
+        <h2>2) Map Elements &amp; Audience</h2>
+        <p>Before touching the layout, we discussed what makes a map communicate:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Main map</strong> — the focus of the map (here, Red Sea State with our analysis layers)</li>
+            <li><strong>Inset map</strong> — spatial context (showing Sudan/East Africa so the reader knows where Red Sea is)</li>
+            <li><strong>Legend</strong> — translates symbols/colours to plain language</li>
+            <li><strong>Scale bar</strong> — allows distance measurement</li>
+            <li><strong>North arrow</strong> — orientation</li>
+            <li><strong>Title/Subtitle</strong> — answers what, where, when</li>
+            <li><strong>Grid</strong> — coordinate reference/measurements on the sheet</li>
+            <li><strong>Notes/Credits/Data sources</strong> — attribution (e.g., OSM, data providers)</li>
+            <li><strong>Attribute table (optional)</strong> — key figures for the area shown</li>
+        </ul>
+
+        <h2>3) Page Setup &amp; Layout Structure with Guides</h2>
+        <p>We created a new Print Layout and set the page size/properties for printing (A3 was used in context). The key trick was using <strong>Guides</strong> to divide the canvas into a clean structure:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Main map area</strong> (~80%) — largest section for the detailed map</li>
+            <li><strong>Sidebar</strong> (~20%) — for inset, legend, north arrow, title/subtitle</li>
+            <li><strong>Lower section</strong> — for attribute table, notes/credits and other supporting elements</li>
+        </ul>
+        <p>Guides keep everything aligned and give a professional, balanced layout.</p>
+
+        <h2>4) Building the Main Map</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Prepare layers</strong> — cleaned attribute tables (consistent naming), ensured all layers in the same CRS (UTM 36N)</li>
+            <li><strong>Add the map item</strong> — placed in the 80% main area, centered on Red Sea State (with context of Sudan visible)</li>
+            <li><strong>Style for clarity</strong> — roads/rivers/railway styled distinctly, boundaries clear, population/analysis layers styled readably</li>
+            <li><strong>Add a grid</strong> — enabled grid on the map, set interval/appearance (solid, very light grey) for a clean look</li>
+            <li><strong>Lock the map</strong> — critically important before setting up the inset and moving elements. Once locked, the map extent won't shift accidentally</li>
+        </ol>
+
+        <h2>5) Inset Map for Spatial Context</h2>
+        <p>In the upper-right sidebar, we added a second <strong>Map</strong> item for the inset:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Zoomed out</strong> to show East Africa and the whole of Sudan</li>
+            <li><strong>Styled to emphasize location</strong> — Sudan shown in a subdued grey, with Red Sea State highlighted in red</li>
+            <li><strong>Linked for clarity</strong> — the inset shows where the detailed main map sits in the broader region</li>
+        </ul>
+
+        <h2>6) Cartographic Elements — Legend, Scale, North Arrow, Text</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Title &amp; Subtitle</strong> — clear, descriptive (answers what/where)</li>
+            <li><strong>Legend</strong> — added, cleaned up item names (remove unnecessary layers), adjust columns/size for readability</li>
+            <li><strong>Scale bar</strong> — added and formatted appropriately for the sheet</li>
+            <li><strong>North arrow</strong> — simple, clean symbol placed in the sidebar</li>
+            <li><strong>Notes &amp; Credits</strong> — data sources (e.g., OSM), attribution, and any notes about the map</li>
+            <li><strong>Attribute table</strong> — placed in the lower section with relevant fields, formatted to fit cleanly</li>
+        </ul>
+
+        <h2>7) Atlas — One Map Sheet Per District</h2>
+        <p>The real power of the Print Layout is the <strong>Atlas</strong>. Instead of making a separate layout for each district, we automate it:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Set coverage layer</strong> — use <code>admin2_districts</code> (or the district layer) as the Atlas coverage layer</li>
+            <li><strong>Configure page name</strong> — set the page name to a district attribute (so each exported page is clearly identified)</li>
+            <li><strong>Control the map extent</strong> — enable "Controlled by Atlas" on the main map so it zooms/pans to each district automatically</li>
+            <li><strong>Preview</strong> — use Atlas Preview to cycle through districts and check extents, labels, and layout</li>
+            <li><strong>Generate output</strong> — export as a multi-page PDF (300 DPI recommended) with one sheet per district</li>
+        </ol>
+        <p>This is exactly what the client asked for: "one clean, printable A3 map sheet of each district — with grid and scale".</p>
+
+        <h2>What We Did Live — Scrub Guide</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>00:00 Welcome &amp; mission</strong> — map production &amp; Atlas for the week</li>
+            <li><strong>02:55 Recap</strong> — rasters vs vectors, Zonal Statistics carried over</li>
+            <li><strong>09:40 Map product &amp; elements</strong> — audience, purpose, core elements</li>
+            <li><strong>14:15 Layout structure</strong> — guides, 80% map / 20% sidebar / lower section</li>
+            <li><strong>19:40 Main map</strong> — layers, styling, CRS check, adding map item, locking</li>
+            <li><strong>24:55 Grids</strong> — adding grid, interval, light grey styling</li>
+            <li><strong>28:10 Inset map</strong> — spatial context, Sudan overview with Red Sea highlighted</li>
+            <li><strong>32:15 Elements</strong> — legend, scale bar, north arrow, title &amp; subtitle</li>
+            <li><strong>36:25 Supporting info</strong> — notes, credits, attribute table</li>
+            <li><strong>39:40 Atlas setup</strong> — coverage layer, page name, controlled by Atlas</li>
+            <li><strong>43:15 Export</strong> — multi-page PDF at 300 DPI, final checks</li>
+            <li><strong>45:25 Recap &amp; Q&amp;A</strong> — deliverable and next steps</li>
+        </ul>
+
+        <h2>Common Hang-ups and Fixes</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Map pans when you don't want it to:</strong> Always <strong>lock the main map item</strong> once it's at the correct extent and scale. Do this before setting up Atlas/inset adjustments.</li>
+            <li><strong>Atlas zooms to the wrong place:</strong> Make sure the map item is set to <em>"Controlled by Atlas"</em> and using the correct coverage layer.</li>
+            <li><strong>Legend shows unwanted layers:</strong> In the legend item properties, uncheck <em>"Auto update"</em> and manually remove or reorder items, or filter to only visible layers as needed.</li>
+            <li><strong>Grid looks too heavy:</strong> Use a light grey, thin line style. Keep it readable but subtle so it doesn't overpower the map content.</li>
+            <li><strong>Attribute table doesn't fit:</strong> Resize and limit columns/fields to only what's necessary for the sheet. Use the lower section with guides for clean alignment.</li>
+            <li><strong>Export looks blurry:</strong> Export at 300 DPI (not screen resolution). Check page size matches what you intend to print.</li>
+            <li><strong>Elements misaligned:</strong> Use guides and alignment tools in the Print Layout. Keep consistent spacing between elements.</li>
+        </ol>
+
+        <h2>What You Should Have Now</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>A clean Print Layout with a logical structure (guides in place)</li>
+            <li><strong>Main map</strong> centered on Red Sea State, with grid added and <strong>locked</strong></li>
+            <li><strong>Inset map</strong> showing Sudan/East Africa with Red Sea highlighted</li>
+            <li>Complete set of elements: title/subtitle, legend, scale bar, north arrow</li>
+            <li>Notes/credits and attribute table placed in the lower section</li>
+            <li><strong>Atlas configured</strong> with <code>admin2_districts</code> as coverage layer, one sheet per district</li>
+            <li><strong>Multi-page PDF exported at 300 DPI</strong> as the final deliverable</li>
+        </ul>
+
+        <p><strong>Deliverable reminder:</strong> Submit your multi-page PDF (one sheet per district, at 300 DPI). Keep practicing the layout structure — it's a skill you'll use in every real cartographic project.</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div>
+            <a class="brand" href="index.html">
+                <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+                <span class="brand-text">
+                    <span class="brand-name">salt<span>co</span></span>
+                    <span class="brand-tagline">Computing &amp; Capacity Building</span>
+                </span>
+            </a>
+            <p class="muted">Practical, hands-on training in free and open source software for real work.</p>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="learning-paths.html">Learning Paths</a>
+            <a href="courses.html">Courses</a>
+            <a href="blog.html">Blog</a>
+            <a href="projects.html">Projects</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="about.html">About</a>
+            <a href="support.html">Support</a>
+        </div>
+        <div class="footer-links">
+            <a href="https://www.youtube.com/@saltco" target="_blank" rel="noopener">YouTube</a>
+            <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+            <a href="feed.xml">RSS</a>
+            <a href="privacy.html">Privacy</a>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <p>&copy; 2026 saltco. All rights reserved.</p>
+    </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>
