@@ -39,8 +39,8 @@
 
         <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
             <strong>Mission:</strong> A client wants one clean, printable A3 map sheet of each district — with grid and scale.<br>
-            <strong>Live focus:</strong> Print Layout setup (guides), main map + inset, legend/scale bar/north arrow/title, locking the map, then <strong>Atlas</strong> to generate one sheet per district and export as a multi-page PDF at 300 DPI.<br>
-            <strong>Data:</strong> Red Sea layers, <code>admin2_districts</code>, railway/roads/rivers, population from previous class (all in same CRS — UTM 36N) &nbsp;|&nbsp; <strong>Deliverable:</strong> Multi-page PDF, one sheet per district, at 300 DPI.
+            <strong>Live focus:</strong> Print Layout setup (guides), main map + inset, legend/scale bar/north arrow/title, locking the map, then build an <strong>Atlas</strong> driven by states that intersect a <strong>5 km railway buffer</strong>, label each sheet with <strong>State Name</strong> and <strong>total railway length (km)</strong> calculated on-the-fly, and export as a multi-page PDF at 300 DPI.<br>
+            <strong>Data:</strong> Red Sea layers, <code>admin2_districts</code>/state layer, railway, roads/rivers, population from previous class (all in same CRS — UTM 36N) &nbsp;|&nbsp; <strong>Deliverable:</strong> Multi-page PDF, one sheet per state (coverage), at 300 DPI showing state boundary, railway and its <strong>5 km hashed buffer</strong>, with total railway length in km for that state.
         </div>
 
         <p>Week 6 gave us surfaces — rasters that let us ask where to build and how many people a district serves. Week 7 is the cartographic step: turning all that analysis into a proper, professional map product that can be printed and communicated clearly to a client or decision-maker.</p>
@@ -112,16 +112,24 @@
             <li><strong>Attribute table</strong> — placed in the lower section with relevant fields, formatted to fit cleanly</li>
         </ul>
 
-        <h2>7) Atlas — One Map Sheet Per District</h2>
-        <p>The real power of the Print Layout is the <strong>Atlas</strong>. Instead of making a separate layout for each district, we automate it:</p>
+        <h2>7) Atlas — One Map Sheet Per State (Driven by Railway Buffer)</h2>
+        <p>The real power of the Print Layout is the <strong>Atlas</strong>. Instead of making a separate layout for each feature manually, we automate it — but with a specific selection criterion.</p>
+        <p>We first created a <strong>5 km buffer</strong> around the railway line. We then used a spatial selection to find which states intersect that railway buffer. The resulting selection was saved/exported as a new layer and used as the <strong>Atlas coverage layer</strong> (so only states that actually intersect the 5 km railway corridor get a map sheet).</p>
         <ol style="margin: 0.5rem 0 1rem 1.5rem;">
-            <li><strong>Set coverage layer</strong> — use <code>admin2_districts</code> (or the district layer) as the Atlas coverage layer</li>
-            <li><strong>Configure page name</strong> — set the page name to a district attribute (so each exported page is clearly identified)</li>
-            <li><strong>Control the map extent</strong> — enable "Controlled by Atlas" on the main map so it zooms/pans to each district automatically</li>
-            <li><strong>Preview</strong> — use Atlas Preview to cycle through districts and check extents, labels, and layout</li>
-            <li><strong>Generate output</strong> — export as a multi-page PDF (300 DPI recommended) with one sheet per district</li>
+            <li><strong>Prepare the corridor</strong> — dissolve/create a <strong>5 km railway buffer</strong> (style as a hatched/hashed pattern for distinction).</li>
+            <li><strong>Select coverage</strong> — select states that <strong>intersect</strong> the 5 km railway buffer, and save/export them as the coverage layer for Atlas.</li>
+            <li><strong>Set coverage layer</strong> — in Atlas, set that exported intersect layer as the coverage layer and configure the page name from a state attribute.</li>
+            <li><strong>Control the map extent</strong> — enable "Controlled by Atlas" on the main map so it zooms/pans to each selected state automatically.</li>
+            <li><strong>Dynamic labels for railway length</strong> — add two labels below/near the state name. Using an expression with <code>@atlas_geometry</code>, we calculated the total railway length inside each atlas feature:
+                <div style="background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; margin: 0.75rem 0; font-family: monospace; font-size: 0.9rem; overflow-x: auto;">
+round(sum(length(intersection($geometry, @atlas_geometry)), group_by:=@atlas_id) / 1000, 1) || ' km'
+                </div>
+                One label shows the <strong>State Name</strong>, the other shows this calculated <strong>total railway length in km</strong> for that state.
+            </li>
+            <li><strong>Style the map</strong> — show the state boundary, the railway, and the <strong>5 km hashed buffer</strong> clearly on each sheet.</li>
+            <li><strong>Preview &amp; export</strong> — use Atlas Preview to cycle through sheets, then export as a multi-page PDF (300 DPI) with one sheet per covered state.</li>
         </ol>
-        <p>This is exactly what the client asked for: "one clean, printable A3 map sheet of each district — with grid and scale".</p>
+        <p>This matches the client brief: one clean, printable map sheet per district/state of interest — with grid and scale — showing the railway corridor and the total railway length present in each state.</p>
 
         <h2>What We Did Live — Scrub Guide</h2>
         <ul style="margin: 0.5rem 0 1rem 1.5rem;">
@@ -134,8 +142,9 @@
             <li><strong>28:10 Inset map</strong> — spatial context, Sudan overview with Red Sea highlighted</li>
             <li><strong>32:15 Elements</strong> — legend, scale bar, north arrow, title &amp; subtitle</li>
             <li><strong>36:25 Supporting info</strong> — notes, credits, attribute table</li>
-            <li><strong>39:40 Atlas setup</strong> — coverage layer, page name, controlled by Atlas</li>
-            <li><strong>43:15 Export</strong> — multi-page PDF at 300 DPI, final checks</li>
+            <li><strong>39:40 Atlas setup</strong> — 5 km railway buffer, select states intersecting buffer → export as coverage layer, control map by Atlas</li>
+            <li><strong>41:20 Dynamic railway length</strong> — expression with <code>intersection($geometry, @atlas_geometry)</code> + <code>sum(length(...))</code> to show total railway km per state</li>
+            <li><strong>43:15 Export</strong> — multi-page PDF at 300 DPI, final checks (railway + hashed 5 km buffer per sheet)</li>
             <li><strong>45:25 Recap &amp; Q&amp;A</strong> — deliverable and next steps</li>
         </ul>
 
@@ -153,15 +162,16 @@
         <h2>What You Should Have Now</h2>
         <ul style="margin: 0.5rem 0 1rem 1.5rem;">
             <li>A clean Print Layout with a logical structure (guides in place)</li>
-            <li><strong>Main map</strong> centered on Red Sea State, with grid added and <strong>locked</strong></li>
-            <li><strong>Inset map</strong> showing Sudan/East Africa with Red Sea highlighted</li>
+            <li><strong>Main map</strong> per sheet showing the state boundary, railway, and the <strong>5 km hashed railway buffer</strong>, with grid added and <strong>locked</strong></li>
+            <li><strong>Inset map</strong> showing Sudan/East Africa for context</li>
             <li>Complete set of elements: title/subtitle, legend, scale bar, north arrow</li>
-            <li>Notes/credits and attribute table placed in the lower section</li>
-            <li><strong>Atlas configured</strong> with <code>admin2_districts</code> as coverage layer, one sheet per district</li>
+            <li>Two dynamic labels: <strong>State Name</strong> and <strong>total railway length (km)</strong> calculated with <code>intersection($geometry, @atlas_geometry)</code> over the railway layer</li>
+            <li>Notes/credits placed cleanly on the sheet</li>
+            <li><strong>Atlas configured</strong> using states that intersect the <strong>5 km railway buffer</strong> as the coverage layer, one sheet per state</li>
             <li><strong>Multi-page PDF exported at 300 DPI</strong> as the final deliverable</li>
         </ul>
 
-        <p><strong>Deliverable reminder:</strong> Submit your multi-page PDF (one sheet per district, at 300 DPI). Keep practicing the layout structure — it's a skill you'll use in every real cartographic project.</p>
+        <p><strong>Deliverable reminder:</strong> Submit your multi-page PDF (one sheet per state covered by the railway buffer, at 300 DPI), showing the corridor and the total railway length in km for each state. Keep practicing the layout structure — it's a skill you'll use in every real cartographic project.</p>
     </article>
 </main>
 
