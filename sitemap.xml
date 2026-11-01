@@ -21,6 +21,16 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://saltco.org/blog-week8-low-bandwidth-offline-web-maps.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://saltco.org/blog-week7-professional-print-layouts-atlas.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://saltco.org/blog-week4-attribute-queries-expressions-selection-math.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
