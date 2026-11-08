@@ -5,11 +5,17 @@
     <link>https://saltco.org/</link>
     <description>Open-source geospatial AI education. Learn GIS, Python, and AI with tools that run offline.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 08 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Applied Spatial Analysis Using QGIS - Capstone Briefing &amp; Final Session</title>
+      <link>https://saltco.org/blog-week9-capstone-briefing-final-session.html</link>
+      <description>Session 9 of 9, the final briefing: one capstone project worth 260 points and 52% of the course. The six graded components and weights, the Sudan data and its limits, six project options, the submission folder, the six defence questions, and the three-month window to the hard deadline of 7 February 2027.</description>
+      <pubDate>Sun, 08 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Applied Spatial Analysis Using QGIS - Low-Bandwidth Offline Web Maps</title>
       <link>https://saltco.org/blog-week8-low-bandwidth-offline-web-maps.html</link>
-      <description>Week 8 (Project 5B): join the district population CSV to admin2_districts, calculate area and population density in the Field Calculator, style with five Natural Breaks classes, clean the popup aliases, then export a self-contained qgis2web/Leaflet folder that opens offline in any browser.</description>
+      <description>Week 8 (Project 5B): join the district population CSV to admin2_districts, calculate area and population density in the Field Calculator, style with five Natural Breaks classes, clean the popup aliases, then export a qgis2web/Leaflet folder that opens offline in any browser — no QGIS, no install. Plus the two failures from our own export: a virtual join that lost the population column, and a basemap that only existed on localhost.</description>
       <pubDate>Sun, 01 Nov 2026 00:00:00 GMT</pubDate>
     </item>
     <item>

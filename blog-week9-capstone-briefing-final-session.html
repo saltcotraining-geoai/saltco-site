@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Spatial Analysis Using QGIS - Capstone Briefing &amp; Final Session — saltco</title>
+    <meta name="description" content="Session 9 — the capstone briefing: one project worth 260 points and 52% of the course, six graded components, six project options on the Sudan data, the submission folder, the defence questions and the three-month deadline window.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article">
+        <span class="date">November 2026 — Session 9 of 9 · Capstone</span>
+        <h1>Applied Spatial Analysis Using QGIS - Capstone Briefing &amp; Final Session</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 08 Nov 2026 · 37:22 (full session) · <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a> (offline-safe)</em></p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <strong>Mission:</strong> one project, built on everything from Weeks 1–8, worth <strong>260 points and 52%</strong> of the course.<br>
+            <strong>Session focus:</strong> the eight-week recap → what a complete project contains → the six graded components and their weights → the data and its limits → <strong>six project options</strong> (five set projects plus design your own) → which option fits you → the submission folder → the six defence questions → the three-month deadline window → where to go afterwards.<br>
+            <strong>Data:</strong> the Sudan training drive — 19 states, 189 districts, 32 cities, 455,065 roads (702 primary), 1,466 railways, 32,805 water lines (8,596 river/canal), 9,213 water bodies, 1,725,098 buildings, plus SRTM (~90 m) and WorldPop (~900 m) rasters &nbsp;|&nbsp; <strong>Deliverable:</strong> one folder — <code>project.qgz</code>, <code>outputs/</code>, <code>map_sheet.pdf</code>, <code>webmap/</code>, <code>summary.txt</code>.
+        </div>
+
+        <div style="background: #fff7ee; border: 1px solid #b5620b; border-left: 4px solid #b5620b; border-radius: 6px; padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.95rem;">
+            <strong>What this session is — and is not.</strong> This is the <strong>capstone briefing</strong>: a slide session, not a live QGIS demo. No software is operated on screen. The student plugin showcase that opened the morning (08:45–08:55) was presented to the class only and is <strong>not in the recording</strong>. The video is 37:22 rather than the 46:00 in the run sheet because the talk ran tighter than planned — nothing was cut in editing.
+        </div>
+
+        <p>Eight weeks ago we started with a question about what GIS is for. Since then: a CSV of field points became real features, degrees became metres, parcels were digitised to share boundaries, an attribute table was queried until the map changed, buffers and intersections turned proximity into a decision, a DEM became slope, analysis became a 300 DPI sheet, and that sheet became a folder that opens in any browser. This final session does not teach a new technique. It tells you what to build with the eight you already own — and how it will be graded.</p>
+
+        <div style="background: var(--light); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 6px; padding: 0.75rem 1.25rem; margin: 0 0 1.5rem; font-size: 0.9rem;">
+            <strong>Language note.</strong> The session is delivered in Arabic with English slides. The scrub guide below follows the slides, which are the fastest way to navigate the video.
+        </div>
+
+        <h2>You Already Own Every Technique</h2>
+        <p>The first thing said on the recording is also the most important: there is nothing new to learn to pass this. Everything the capstone needs was demonstrated, built and submitted as a weekly lab.</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Week 1</strong> — field data import &amp; context: Add Delimited Text, CRS on the fly → <code>field_plots</code> over Sudan.</li>
+            <li><strong>Week 2</strong> — permanent metric transform: reproject and save, not on-the-fly → <code>survey_plots_utm36n</code>.</li>
+            <li><strong>Week 3</strong> — cadastral boundaries &amp; topology: node tool, snapping, check validity → a clean parcels layer.</li>
+            <li><strong>Week 4</strong> — queries and selection math: filter expressions, <code>$length</code>, <code>CASE WHEN</code> → filtered primary roads.</li>
+            <li><strong>Week 5</strong> — proximity &amp; multi-criteria: buffer, clip, intersection, distance to nearest → clipped buildings and affected hectares.</li>
+            <li><strong>Week 6</strong> — raster &amp; demographic planning: zonal statistics, raster calculator → district population sums.</li>
+            <li><strong>Week 7</strong> — professional print layouts: layout, atlas, grid, 300 DPI export → a multi-page PDF map sheet.</li>
+            <li><strong>Week 8</strong> — low-bandwidth web maps: vector joins, qgis2web export → an offline <code>index.html</code> folder.</li>
+        </ul>
+        <p>Read that list again as a checklist: it is the capstone. A project that proves six of those eight gives the marker everything they are looking for.</p>
+
+        <h2>The Six Components, and What They Weigh</h2>
+        <p>The capstone is <strong>260 points, 52% of the course</strong>. It is not one deliverable graded holistically — it is six components, each with its own weight, each traceable to a week:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Attribute query on a real condition — 20%</strong> (Week 4). Not <code>"fclass" = 'river'</code> copied from a lab: a condition that selects the features your project is actually about.</li>
+            <li><strong>Metric buffer or setback, in UTM 36N — 20%</strong> (Week 5). Distances in metres, on a projected layer, with the number justified in writing.</li>
+            <li><strong>Spatial extraction — 20%</strong> (Week 5). Clip, intersection or select-by-location, and you must be able to say which one and why that one.</li>
+            <li><strong>Demographic or terrain context — 10%</strong> (Week 6). Zonal statistics on WorldPop, or slope and aspect from the DEM. Context, not decoration.</li>
+            <li><strong>Print map sheet — 15%</strong> (Week 7). Grid, scale bar, north arrow, legend, 300 DPI.</li>
+            <li><strong>Offline interactive web map — 15%</strong> (Week 8). The qgis2web folder that opens with no internet.</li>
+        </ol>
+        <p>Plus a <strong>three-sentence written summary</strong> inside the folder: what you selected, on what criteria, and what you trust least about the result.</p>
+        <div style="background: var(--light); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 6px; padding: 0.75rem 1.25rem; margin: 0.75rem 0 1.5rem; font-size: 0.9rem;">
+            <strong>The rule worth knowing before you start.</strong> Skipping a component caps the project — it does not fail it. A beautiful map sheet with no query and no buffer cannot score above the weight of the parts it has. Build all six, then make them good.
+        </div>
+
+        <h2>Your Data — and the Counts That Decide Your Method</h2>
+        <p>Everything runs from the Sudan training drive, in two mirrored folders: <code>training_utm36n</code> in metres and <code>training_wgs84</code> in degrees. Eight vector layers and two rasters:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>States</strong> — 19 polygons (<code>admin1_states</code>)</li>
+            <li><strong>Districts</strong> — 189 polygons (<code>admin2_districts</code>), the layer most projects are about</li>
+            <li><strong>Cities &amp; towns</strong> — 32 points</li>
+            <li><strong>Roads</strong> — 455,065 lines, of which only <strong>702 are primary</strong></li>
+            <li><strong>Railways</strong> — 1,466 lines</li>
+            <li><strong>Rivers &amp; waterways</strong> — 32,805 lines, of which <strong>8,596 are river or canal</strong></li>
+            <li><strong>Water bodies</strong> — 9,213 polygons</li>
+            <li><strong>Buildings</strong> — 1,725,098 polygons</li>
+            <li><strong>SRTM DEM</strong> — ~90 m, delivered in EPSG:4326 (degrees)</li>
+            <li><strong>WorldPop 2020</strong> — ~900 m population per cell</li>
+        </ul>
+        <p>Those counts are not trivia. They are the reason four of the five set options start with <strong>filter first, buffer second</strong>: buffering 455,065 roads or 32,805 water lines will lock a laptop for an afternoon and produce an answer nobody asked for.</p>
+
+        <h2>Reality Check — What This Data Will Not Do</h2>
+        <p>This was the most valuable slide in the session, and the section most likely to save a weekend. Five honest limits:</p>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>There are no "public buildings".</strong> <code>buildings.fclass</code> is <code>building</code> for all 1,725,098 rows and <code>name</code> is empty. You cannot query for schools, clinics or mosques. Siting a facility has to be argued from road proximity, elevation and population — and that reasoning has to be written down.</li>
+            <li><strong>Do not buffer all the water.</strong> <code>rivers_waterways</code> contains streams and drains. <code>"fclass" IN ('river','canal')</code> gives 8,596 lines, and that is what a flood setback actually means.</li>
+            <li><strong>The DEM is in degrees.</strong> <code>srtm_sudan.tif</code> is EPSG:4326. Slope computed on a geographic raster is meaningless — and it looks plausible, which is worse. Warp to EPSG:32636 first. This is a graded defence question.</li>
+            <li><strong>No SAGA and no GRASS in your QGIS.</strong> Checked on 3.44.15: 391 processing algorithms, none from those providers. Anything you propose has to run on the native and GDAL providers, not on a package installed the night before.</li>
+            <li><strong>Work in copies, never on the masters.</strong> The training editions have trimmed fields; the masters keep everything. And keep the CRS rule: UTM 36N for anything measured in metres, WGS 84 for the qgis2web export.</li>
+        </ol>
+
+        <h2>The Six Project Options</h2>
+        <p>Five are written for this dataset and this environment. The sixth is yours. Each one is scoped so that the six components fall out naturally — that is the point of a set option: the method already proves what the rubric asks for.</p>
+
+        <h3>Option 1 — Optimal Humanitarian Logistics &amp; Supply Hub</h3>
+        <p><em>Vector focus.</em> Choose the best site for an emergency supply warehouse serving a region, and defend it.</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Filter roads to trunk + primary, railways to <code>"fclass" = 'rail'</code>.</li>
+            <li>Buffer roads 2 km and railways 5 km in EPSG:32636 — real metres.</li>
+            <li>Intersect the two buffers: the corridor a truck and a freight train can both reach.</li>
+            <li>Zonal Statistics (SUM) of <code>population_2020_1km.tif</code> over the corridor.</li>
+            <li>Verify your candidate: 500 m from rivers and canals, outside water bodies.</li>
+        </ul>
+        <p><strong>Watch out:</strong> buffering residential roads (358,208 of them) will lock the machine. <strong>Proves:</strong> Week 4 query, Week 5 buffer + intersect, Week 6 zonal stats.</p>
+
+        <h3>Option 2 — Emergency Flood Evacuation Shelter Siting</h3>
+        <p><em>Vector, rewritten for the data.</em> Find candidates that are safe from the Nile and its canals and still reachable by road.</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Buffer rivers + canals 5 km (<code>"fclass" IN ('river','canal')</code>), then dissolve.</li>
+            <li>Select buildings <strong>outside</strong> that hazard zone (extract by location, disjoint), inside one district.</li>
+            <li>Keep only buildings within 1 km of a gravel-or-better road.</li>
+            <li>Add terrain safety: clip the DEM to the district, reproject, keep cells above the local median elevation.</li>
+            <li>Rank survivors by footprint area as a capacity proxy, and pick the top five.</li>
+        </ul>
+        <p><strong>Watch out:</strong> the buildings layer is 1.7M polygons — clip it to one district before you buffer anything. <strong>Proves:</strong> query, buffer, clip, select-by-location, terrain, zonal stats.</p>
+
+        <h3>Option 3 — Health Clinic Accessibility Index</h3>
+        <p><em>Spatial analysis &amp; statistics.</em> Show which districts are underserved by transport, and rank them for clinic investment.</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Sum line lengths</strong> into <code>admin2_districts</code> (roads as lines, EPSG:32636). Districts with no lines come back NULL, not zero — report them separately.</li>
+            <li>Buffer the roads 5 km and dissolve: the area a clinic can actually serve.</li>
+            <li>Clip the buffer to each district, then Zonal Statistics SUM of population inside it.</li>
+            <li><code>served_share = population inside / "Total_Population"</code>, plus road km per 100 km&sup2; for context.</li>
+            <li>Classify into quartiles with a <code>CASE WHEN</code> expression so the legend words itself, then name the three most underserved districts.</li>
+        </ul>
+        <p><strong>Watch out:</strong> buffer the filtered roads, and <code>$area</code> is only trustworthy in a projected CRS. <strong>Proves:</strong> Week 2 CRS discipline, Week 4 expressions, Week 5 buffer, Week 6 zonal stats, Week 7 atlas.</p>
+
+        <h3>Option 4 — Infrastructure Conflict Points: Roads &times; Waterways</h3>
+        <p><em>Vector analysis.</em> Produce a bridge and ford inventory: every place a road crosses a river or canal, by road class.</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Filter <code>rivers_waterways</code> to <code>"fclass" IN ('river','canal')</code>.</li>
+            <li>Vector → Analysis → <strong>Line Intersections</strong> with roads as the overlay; each point keeps its road class.</li>
+            <li>Categorise: trunk/primary = probable bridge, track/path = probable ford.</li>
+            <li>Buffer each crossing 1 km, then Zonal Statistics SUM of population — the people who depend on that crossing.</li>
+            <li>Rank by population served, count per state, map the pressure.</li>
+        </ul>
+        <p><strong>Watch out:</strong> run it on one state first — roads &times; all waterways nationally is a large Cartesian job. <strong>Proves:</strong> query, buffer, intersection, zonal stats, join.</p>
+
+        <h3>Option 5 — Small-Scale Agricultural Slope Suitability</h3>
+        <p><em>Raster &amp; terrain.</em> Find irrigable, machinery-friendly land: flat, near water, and not in the flood footprint.</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Clip <code>srtm_sudan.tif</code> to your district, then warp the clip to EPSG:32636.</li>
+            <li>Raster → Analysis → <strong>Slope</strong> on the reprojected clip (degrees output).</li>
+            <li>Raster Calculator: flat = slope &lt; 5&deg;, with a second 5–12&deg; class.</li>
+            <li>Buffer rivers/canals 1 km for irrigation access, intersect with the flat class.</li>
+            <li>Remove water bodies and rank the remaining polygons by area.</li>
+        </ul>
+        <p><strong>Watch out:</strong> slope on an unwarped geographic DEM is the classic wrong answer. <strong>Proves:</strong> reprojection, buffer/intersect, raster calculator, zonal stats.</p>
+
+        <h3>Option 6 — Design Your Own Project</h3>
+        <p><em>Proposed and approved by you.</em> Bring a question from your own survey practice and turn it into one of the workflows above.</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Write the question as one sentence that ends in a map: "where should X be", "how many Y are affected".</li>
+            <li>List the layers you need — from this drive, or addable offline.</li>
+            <li>Name at least one vector technique and one raster or demographic technique.</li>
+            <li>Commit to the same deliverables, so grading stays comparable.</li>
+            <li>Send the paragraph to the TA by <strong>Friday 13 November</strong> so it can be approved or adjusted.</li>
+        </ul>
+        <p><strong>Watch out:</strong> too big is the usual failure. "Sudan" is not a site; one district is. Scope it small and finish it.</p>
+
+        <h2>Which Option Fits You</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>You like attribute work and clean logic → <strong>Option 1 or 4</strong>. Low effort, core muscles: vector, query, intersection.</li>
+            <li>You want the most "real job" deliverable → <strong>Option 2</strong>. Medium effort: buffer, clip, ranking, written defence.</li>
+            <li>You like numbers, indices and statistics → <strong>Option 3</strong>. Medium effort: aggregate, join, classify.</li>
+            <li>You prefer rasters to vectors → <strong>Option 5</strong>. Medium-high effort: warp, slope, reclassify, raster calculator.</li>
+            <li>You have your own survey question → <strong>Option 6</strong>. You scope it, but it must still prove the six components.</li>
+        </ul>
+        <p>Pick the one you will still be interested in during January. Three months is a long time to look at a topic you chose for the wrong reason.</p>
+
+        <h2>Submission — Hand In a Folder, Not a File</h2>
+        <p>The structure is fixed, and it is fixed for a reason: the marker must be able to open your project on a machine that is not yours.</p>
+        <pre style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; overflow-x: auto; font-size: 0.9rem; margin: 0.5rem 0 1rem;">Capstone_&lt;YourName&gt;_&lt;OptionNumber&gt;/
+├─ project.qgz      loads your layers, no absolute paths off the drive
+├─ outputs/         your gpkg layers - the analysis, not just screenshots
+├─ map_sheet.pdf    300 DPI, grid, scale bar, north arrow, legend
+├─ webmap/          qgis2web export; index.html opens with no internet
+├─ summary.txt      3 sentences: what you selected, criteria, what you trust least
+└─ data/            only files you created - never re-submit the masters</pre>
+        <p>Two practical rules that decide whether this opens: <strong>relative paths</strong> (save the project inside the folder, not on your desktop), and <strong>test the web map with the network off</strong>. A qgis2web folder that calls a tile server is not offline, however good it looks on your machine.</p>
+
+        <h2>The Six Defence Questions</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Why UTM 36N here — what breaks if you buffer in WGS 84?</li>
+            <li>Show your query: what does each operator actually do to the selection?</li>
+            <li>Clip or intersection — which did you use, and why that one?</li>
+            <li>How did you estimate population, and what does the SUM column mean?</li>
+            <li>Your DEM was in degrees. What did that do to your slope numbers?</li>
+            <li>Which part of your result would you trust least, and what would fix it?</li>
+        </ol>
+        <p>These are not trick questions, and they are published before you start. The last one is the professional one: every real analysis has a weak point, and the person who names it before the client does is the one who gets hired again.</p>
+
+        <h2>The Capstone Window — Three Months, With Check-ins</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Sun 8 Nov 2026</strong> — choose your option. One line to the TA: option number + district.</li>
+            <li><strong>Fri 13 Nov 2026</strong> — own-project proposals only: send the paragraph.</li>
+            <li><strong>Mon 14 Dec 2026 — check-in 1</strong> — a single screenshot in the WhatsApp group. No writing, no report.</li>
+            <li><strong>Sun 17 Jan 2027 — check-in 2</strong> — first draft map sheet. Ugly is fine; something on the page.</li>
+            <li><strong>Sun 7 Feb 2027, 23:00 — HARD DEADLINE</strong> — the capstone folder, any outstanding quizzes (Sessions 2–9) and any labs still owed.</li>
+            <li><strong>Rolling, from the day you submit</strong> — grading starts as submissions arrive; you do not wait for the rest of the class.</li>
+            <li><strong>Sun 21 Feb 2027</strong> — review, defence and certificate-clearance session.</li>
+        </ul>
+        <p><strong>Why three months.</strong> Real jobs, families and network outages happened during this term, and a course that punishes them is not a fair course. The window is the accommodation. The usual failure with a long window is the slow start: a week is nothing, three months quietly becomes nothing. The two check-ins exist so nobody discovers in late January that a layer will not load.</p>
+        <p>Quiz retakes are allowed inside the window, on the same 10-point proportional scale, best attempt counts. Need longer than 7 February? <strong>Ask before 24 January, not after</strong> — a named reason and a new date agreed in advance is fine; silence is not. And nothing about the standard is relaxed: same six components, same weights, same defence in front of the group.</p>
+
+        <h2>After the Certificate — Four Routes</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Geomatics &amp; land administration</strong> — builds on Weeks 2–3. Datums and projections properly: the PROJ database, EPSG codes, geoid heights, your national transverse Mercator zone. GNSS baselines and RTK, total-station to GIS, cadastral quality and error budgets, QField capture, the LADM (ISO 19152) land-administration model.</li>
+            <li><strong>Spatial data engineering</strong> — builds on Weeks 4–6. PostGIS: <code>ST_Length</code>, <code>ST_Buffer</code>, <code>ST_DWithin</code>, spatial joins and indexes. Then Python: GeoPandas, Shapely, Rasterio, pyproj, PyQGIS and Processing scripts. <code>ogr2ogr</code> and <code>gdalwarp</code> on the command line, and Git for anything with a version.</li>
+            <li><strong>Web geoservices &amp; open data</strong> — builds on Week 8. GeoServer and the OGC protocols behind it (WMS, WFS, WMTS), vector tiles (MVT), STAC for imagery, OpenLayers or MapLibre instead of a plugin export, Docker on one small server, caching for a low-bandwidth office.</li>
+            <li><strong>Remote sensing, hydrology &amp; GIScience</strong> — builds on Week 6 plus Python. The watershed work cut from the capstone lives here: GRASS <code>r.watershed</code> and SAGA flow accumulation, SWAT+ catchments, Sentinel-1/2 time series, NDVI, image classification, Moran's I, kriging, hotspot analysis. Earth Engine and OpenEO are the low-cost doors in.</li>
+        </ul>
+        <p>And the habits that matter more than the route: build a <strong>portfolio, not a certificate collection</strong> — three finished maps, each with its method, data source, CRS and licence written down; <strong>automate one thing you did by hand</strong> in class; <strong>give something back early</strong> — map with HOT OSM, fix the attributes of your own district, translate a few QGIS strings, answer one beginner question a week. Keep a <strong>methods log</strong>: when a client or a court asks how a number was produced, the log is your professional protection.</p>
+
+        <h2>Scrub Guide — Where to Find Things in the Video</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>00:00 Welcome</strong> — the final milestone and how the morning runs</li>
+            <li><strong>01:41 Recap</strong> — you already own every technique a capstone needs</li>
+            <li><strong>04:34 The mission</strong> — 260 points, 52% of the course</li>
+            <li><strong>06:37 The six components</strong> — and how they are graded</li>
+            <li><strong>09:06 Your data</strong> — nine layers and the counts that decide your method</li>
+            <li><strong>09:59 Reality check</strong> — what this data will not do</li>
+            <li><strong>13:28 Option 1</strong> — humanitarian logistics and supply hub</li>
+            <li><strong>15:25 Option 2</strong> — flood evacuation shelter siting</li>
+            <li><strong>16:47 Option 3</strong> — health clinic accessibility index</li>
+            <li><strong>18:34 Option 4</strong> — infrastructure conflict points: roads &times; waterways</li>
+            <li><strong>20:01 Option 5</strong> — small-scale agricultural slope suitability</li>
+            <li><strong>21:20 Option 6</strong> — design your own project</li>
+            <li><strong>23:08 Which option fits you</strong> — the decision aid</li>
+            <li><strong>24:00 Submission</strong> — hand in a folder, not a file</li>
+            <li><strong>26:21 Defence</strong> — the questions they will ask</li>
+            <li><strong>27:44 Dates</strong> — the three-month capstone window</li>
+            <li><strong>28:24 How the window works</strong> — check-ins, retakes, extensions</li>
+            <li><strong>28:46 What next</strong> — four routes from here</li>
+            <li><strong>33:26 How to keep growing</strong> — after the certificate</li>
+            <li><strong>35:09 Gratitude</strong> — and the one thing open source asks of you</li>
+            <li><strong>36:07 Credits, licences and support</strong></li>
+        </ul>
+
+        <h2>Common Ways This Goes Wrong</h2>
+        <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li><strong>Project opens with missing layers.</strong> Absolute paths. Save the <code>.qgz</code> inside the submission folder with the data next to it.</li>
+            <li><strong>The web map needs the internet.</strong> A tile layer points at <code>localhost</code> or OSM. Export with no basemap and a background colour, or ship the tiles.</li>
+            <li><strong>Slope numbers are nonsense.</strong> The DEM was still in EPSG:4326. Warp to UTM 36N first.</li>
+            <li><strong>Buffers take hours.</strong> Unfiltered roads or waterways. Query first — 702 primary roads, 8,596 river/canal lines.</li>
+            <li><strong>The map sheet is 96 DPI.</strong> Export at 300 DPI with a grid, scale bar, north arrow and legend, or lose the 15%.</li>
+            <li><strong>Population column missing from the popup.</strong> It was a virtual join. Materialise it into a real field before the qgis2web export.</li>
+            <li><strong>No query, no buffer.</strong> A handsome map cannot score the components it does not contain. The cap is the point.</li>
+            <li><strong>Scope creep.</strong> "Sudan" is not a site. One district, one question, finished.</li>
+            <li><strong>Silence at check-in 1.</strong> The one that stops answering is the one who needs help. One screenshot is the whole requirement.</li>
+        </ol>
+
+        <h2>What You Should Have by 7 February 2027</h2>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>A <strong>chosen option</strong> and a district — one line already sent to the TA</li>
+            <li><code>project.qgz</code> that opens on another machine with relative paths</li>
+            <li><code>outputs/</code> with the actual analysis layers, not screenshots</li>
+            <li>A <strong>300 DPI map sheet</strong> with grid, scale bar, north arrow and legend</li>
+            <li>A <strong>qgis2web folder</strong> that opens with the network off</li>
+            <li><code>summary.txt</code> — three sentences, including what you trust least</li>
+            <li>Any outstanding quizzes (Sessions 2–9) and labs cleared</li>
+        </ul>
+
+        <h2>What's Next</h2>
+        <p>There is no Week 10. The next time this class meets formally is the <strong>review and certificate-clearance session on Sunday 21 February 2027</strong>: projects shown live, defence questions in front of the group, then certificates released. Between now and then the work is yours, with two check-ins on the way.</p>
+        <p>The last thing said on the recording is the thing worth repeating. Every tool in this course was free. It ran on hardware you already owned, and it worked offline when the internet did not. That is not a small detail — it is the whole argument. With open tools, people with the fewest resources can do the same work as the people with the biggest budgets. The certificate is proof of the skill, not proof of what you paid.</p>
+        <p>Thank you to everyone who attended, asked the questions that stopped the class, and built along the way. Thank you to the QGIS and OSGeo communities, the Linux desktop, GDAL/OGR, GRASS, SAGA, PostGIS, GeoServer, OpenLayers and Python — free because engineers gave their working lives to shared tools, not because someone was being generous. And thank you to the people who made the data open: OpenStreetMap contributors, Geofabrik, OCHA HDX and the COD-AB boundaries team, Natural Earth, WorldPop, and NASA SRTM via CGIAR-CSI. A country no commercial vendor bothered to price can still be mapped, because those sources exist.</p>
+        <p>Open does not mean ownerless. Attribute the sources, share what you derive, and pay it forward — give your templates away, publish your district's data, answer the next beginner. That is how a community like this keeps existing for the next class.</p>
+
+        <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> Course site <a href="https://saltco.org">saltco.org</a> · YouTube <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">@saltcoTraining</a> · Software QGIS (free &amp; open source, no internet required after setup) · Previous: <a href="blog-week8-low-bandwidth-offline-web-maps.html">Week 8 — Low-Bandwidth Offline Web Maps</a> · Full briefing and deck: <code>09_Capstone/Final_Class_Capstone_Briefing</code>.</p>
+
+        <p><em>Did I miss something? Tell me in the Q&amp;A or open an issue — this archive is living and I will update it.</em> — Sallah</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    if (toggle) toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

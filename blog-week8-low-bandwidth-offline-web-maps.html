@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Applied Spatial Analysis Using QGIS - Low-Bandwidth Offline Web Maps — saltco</title>
-    <meta name="description" content="Week 8 — Low-Bandwidth Offline Web Maps: join district population, calculate area and density, style with 5 Natural Breaks classes, then export a self-contained qgis2web/Leaflet map that opens offline in any browser.">
+    <meta name="description" content="Week 8 — Low-Bandwidth Offline Web Maps: join district population, calculate area and density, style with 5 Natural Breaks classes, then export a qgis2web/Leaflet folder whose data, popups and tools open offline in any browser.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -35,12 +35,16 @@
     <article class="article">
         <span class="date">November 2026 — Week 8 of 9</span>
         <h1>Applied Spatial Analysis Using QGIS - Low-Bandwidth Offline Web Maps</h1>
-        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 01 Nov 2026 · 39:27 · <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a> (offline-safe)</em></p>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>Applied Spatial Analysis Using QGIS — GIS for Surveyors (2026 Cohort) · 01 Nov 2026 · 43:30 (full session) · updated 02 Nov 2026 · <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a> (offline-safe)</em></p>
 
         <div style="background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
             <strong>Mission:</strong> The project manager has no QGIS and may have no internet. Send a map that opens offline in any browser.<br>
             <strong>Live focus:</strong> Recap print layouts and Atlas → what web mapping is and who it serves → a new project with states, districts and a <strong>custom XYZ basemap</strong> (to avoid OSM/CORS failures) → join the district population CSV → <strong>Field Calculator</strong> for area (m&sup2;/km&sup2;) and population density → <strong>Graduated</strong> with 5 <strong>Natural Breaks (Jenks)</strong> classes → clean aliases in the <strong>Attribute Form</strong> → export with <strong>qgis2web / Leaflet</strong> → test popups offline → <strong>zip the folder</strong>.<br>
-            <strong>Data:</strong> <code>admin1_states</code>, <code>admin2_districts</code>, <code>population_by_district.csv</code> (2020), custom XYZ basemap &nbsp;|&nbsp; <strong>Deliverable:</strong> A zipped <code>qgis2web</code> folder — open <code>index.html</code> anywhere, no install (Project 5B).
+            <strong>Data:</strong> <code>sdn_states_fixed</code>, <code>admin2_districts</code> (189 districts, UTM 36N), <code>population_by_district.csv</code> (2020), custom XYZ basemap on a local tile server &nbsp;|&nbsp; <strong>Deliverable:</strong> A zipped <code>qgis2web</code> folder — open <code>index.html</code> anywhere, no install (Project 5B).
+        </div>
+
+        <div style="background: #fff7ee; border: 1px solid #b5620b; border-left: 4px solid #b5620b; border-radius: 6px; padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.95rem;">
+            <strong>Corrections, 02 Nov 2026.</strong> Checking this post against the class project file and the exported folder: four statements were wrong or too generous. The exported web map <strong>does</strong> lose the joined population column (it did in our own export), the basemap we used is a <strong>local tile server</strong> that will not exist on the recipient's machine, the field names below were idealised rather than the ones we actually created, and the timings now match the full 43:30 upload. The two failures are now their own section — they are worth more to you than the success.
         </div>
 
         <p>Week 7 ended with paper: a 300 DPI PDF, one survey sheet per district. Paper answers a client. But the project manager does not have QGIS, cannot install it, and may not have internet. The analysis is useless to them unless it travels as something they can open. This week the map becomes a <strong>folder</strong> — HTML, CSS, JavaScript and data — that opens in any browser with a double-click.</p>
@@ -74,8 +78,9 @@
         <p>Under the hood every web map is built from the same three languages as every website: <strong>HTML</strong> for structure, <strong>CSS</strong> for appearance, <strong>JavaScript</strong> for behaviour. You do not need to learn them for this week. <strong>qgis2web</strong> writes them from your QGIS project. The point is to know what you are shipping: a self-contained folder, not a link that dies when the internet does.</p>
 
         <h2>2) A Project and a Basemap You Control</h2>
-        <p>We started a new project and added two layers from the training data: <code>admin1_states</code> and <code>admin2_districts</code>. The districts are the layer the whole map is about — the states are context.</p>
-        <p>Then the basemap. The tempting choice is the default OpenStreetMap XYZ layer, but an exported web map that depends on OSM tiles is not offline, and it can fail with <strong>CORS</strong> or rate-limit errors when the browser opens the local file. So we created our own <strong>XYZ Tiles</strong> connection and kept it at the bottom of the stack. If no tile source is available, export without tiles and set a plain background colour — a clean district map beats a broken basemap every time.</p>
+        <p>We started a new project (<code>training_webmapping_20261101.qgz</code>) and added two layers from the training data: <code>sdn_states_fixed</code> and <code>admin2_districts</code>. The districts are the layer the whole map is about — the states are context.</p>
+        <p>Then the basemap. The tempting choice is the default OpenStreetMap XYZ layer, but an exported web map that depends on OSM tiles is not offline, and it can fail with <strong>CORS</strong> or rate-limit errors when the browser opens the local file. So we created our own <strong>XYZ Tiles</strong> connection — <code>http://localhost:8000/{z}/{x}/{y}.png</code>, a tile server running on this machine — and kept it at the bottom of the stack.</p>
+        <p><strong>And that is exactly where the trouble starts.</strong> Open the exported <code>index.html</code> and there is one tile layer in it, pointing at <code>localhost</code>. On my laptop the map looks finished. On yours the same folder shows correct, clickable districts floating on a blank grey field. The vector data is portable; the tiles are not. The clean answer for our conditions is to export with <strong>no basemap</strong> and a plain background colour — a district choropleth does not need imagery underneath it. If you keep OSM instead, say out loud that the basemap needs internet.</p>
         <p>The rule for the layer stack is the same as Week 7: <strong>only publish what the viewer needs</strong>. Every extra layer makes the folder heavier and the map slower.</p>
 
         <h2>3) Joining the Population Table</h2>
@@ -88,15 +93,22 @@
         <h2>4) Area and Density in the Field Calculator</h2>
         <p>Raw population flatters big districts. Density is the fair comparison, and density needs area. In the attribute table of <code>districts_population</code>, with editing on, the Field Calculator produced:</p>
         <ul style="margin: 0.5rem 0 1rem 1.5rem;">
-            <li><code>Area_sqM</code> → <code>$area</code></li>
-            <li><code>Area_sqKM</code> → <code>$area / 1000000</code></li>
-            <li><code>POP_Density_perSKM</code> → <code>"population_est_2020" / ($area / 1000000)</code></li>
+            <li><code>area_sqm</code> → <code>$area</code></li>
+            <li><code>area_sqKM</code> → <code>"area_sqm" / 1000000</code></li>
+            <li><code>Pop_Density_pSqKM</code> → <code>"population_by_district_population_est_2020" / "area_sqKM"</code></li>
         </ul>
+        <p>The numbers off our own table — worth checking against yours:</p>
+        <ul style="margin: 0.5rem 0 1rem 1.5rem;">
+            <li>Abasiya (South Kordofan): 157,154.6 people, 42,313 km² → <strong>3.71 /km²</strong></li>
+            <li>Abu Hamad (River Nile): 124,299.9 people, 316,676 km² → <strong>0.39 /km²</strong></li>
+            <li>Abu Karinka (East Darfur): 172,250.1 people, 24,525 km² → <strong>7.02 /km²</strong></li>
+        </ul>
+        <p>The decimals are not a mistake: these are modelled figures (WorldPop 2020), not a census count. Say so before someone asks why a district has a third of a person.</p>
         <p>This works because the layer is in a projected CRS with metre units (UTM 36N). In EPSG:4326, <code>$area</code> returns square degrees and the number is meaningless. That is the Week 2 rule, still true: reproject before you measure.</p>
 
         <h2>5) Graduated Symbology with Natural Breaks</h2>
-        <p>Symbology → <strong>Graduated</strong>, value = <code>POP_Density_perSKM</code>, color ramp = a sequential light-to-dark ramp, mode = <strong>Natural Breaks (Jenks)</strong>, classes = <strong>5</strong>.</p>
-        <p>Jenks puts the class breaks where the data naturally clusters. The result shows the real contrast — Khartoum's crowded districts at the dark end, the desert districts at the light end — instead of an equal-interval ladder that puts almost everything in one class. Five classes is enough for a district map; more classes make the legend unreadable and the map look busier than the data.</p>
+        <p>Symbology → <strong>Graduated</strong>, value = <code>Pop_Density_pSqKM</code>, colour ramp = a sequential yellow-to-red ramp, mode = <strong>Natural Breaks (Jenks)</strong>, classes = <strong>5</strong>. The breaks our data produced: <code>0–10 · 10–41 · 41–126 · 126–312 · 312–574</code>. Four classes below 312 and one long tail above — that is Jenks doing its job, where equal intervals would bury everything in the bottom class.</p>
+        <p>The result shows the real contrast — Khartoum's crowded districts at the dark end, the desert districts at the light end. Five classes is enough for a district map; more make the legend unreadable and the map look busier than the data is.</p>
 
         <h2>6) Clean Aliases for the Popup</h2>
         <p>The field names are fine for us and ugly for the viewer. In <strong>Layer Properties → Attributes Form → Drag and Drop Designer</strong>, we built the form in reading order and set aliases:</p>
@@ -105,41 +117,53 @@
             <li>District Name → <code>adm2_name</code></li>
             <li>Population (2020) → <code>population_est_2020</code></li>
             <li>Area (km&sup2;) → <code>Area_sqKM</code></li>
-            <li>Density (people/km&sup2;) → <code>POP_Density_perSKM</code></li>
+            <li>Density (people/km&sup2;) → <code>Pop_Density_pSqKM</code></li>
         </ul>
-        <p>qgis2web uses these aliases as popup headings. Ten minutes here is the difference between <code>POP_Density_perSKM: 1432.7</code> and <strong>Density (people/km&sup2;): 1432.7</strong>.</p>
+        <p>qgis2web uses these aliases as popup headings. Ten minutes here is the difference between <code>Pop_Density_pSqKM: 7.02</code> and <strong>Density (people/km&sup2;): 7.02</strong>.</p>
 
         <h2>7) Export with qgis2web and Leaflet</h2>
         <p>We installed the <strong>qgis2web</strong> plugin (Plugins → Manage and Install Plugins) and opened <strong>Web → qgis2web → Create Web Map</strong>.</p>
         <ul style="margin: 0.5rem 0 1rem 1.5rem;">
             <li><strong>Layers and Groups:</strong> untick temporary layers and the CSV table; set the district layer's popup to <em>Inline Label</em>; leave the basemap without a popup.</li>
-            <li><strong>Appearance:</strong> layer list on, measure tool on, scale bar optional, neutral background colour, zoom levels <strong>2 to 20</strong>.</li>
+            <li><strong>Appearance:</strong> layers list <strong>collapsed</strong>, measure tool on (Metric), popups on hover, geolocate on, <strong>address search None</strong> — the search box calls a public geocoder, which is a quiet way to make an "offline" map phone home.</li>
+            <li><strong>Scale/Zoom:</strong> match project CRS, min zoom <strong>1</strong>, max zoom <strong>28</strong> in the dialog; the exported page caps the map at 20 and the tile layer at 19, because the tiles simply do not exist deeper.</li>
+            <li><strong>What it weighs:</strong> <code>admin2_districts</code> 1.39 MB + <code>sdn_states_fixed</code> 0.79 MB, zipped to <strong>1.1 MB</strong> (<code>webmapping_template.zip</code>). A country-scale interactive district map for less than a phone photo.</li>
             <li><strong>Export:</strong> mapping library <strong>Leaflet</strong>, output to a path with no spaces (<code>~/outputs/webmap</code>).</li>
         </ul>
         <p>qgis2web wrote a folder containing <code>index.html</code>, <code>css/</code>, <code>js/</code>, <code>data/</code> and the layer files. The export log is worth reading: warnings about layer size or missing fields appear there.</p>
 
         <h2>8) Verify Offline, Then Zip</h2>
-        <p>We opened the folder, double-clicked <code>index.html</code>, and the map loaded. Pan, zoom, click a district — the popup showed State, District, Population, Area and Density. The layer control and the measure tool worked. The export is self-contained, so it draws without a network. Do the honest test yourself before you submit: disconnect Wi-Fi, reload the page, and click a district.</p>
+        <p>We opened the folder, double-clicked <code>index.html</code>, and the map loaded: pan, zoom, measure, layer control, and a popup on click. Then we looked at what was actually in it.</p>
+
+        <h2>The Two Failures, Because They Are the Useful Part</h2>
+        <p><strong>1. Population was not in the popup.</strong> The exported attribute keys are <code>adm1_name</code>, <code>adm2_name</code>, <code>area_sqm</code>, <code>area_sqKM</code> and <code>Pop_Density_pSqKM</code> — the joined population is absent. Density survived because we wrote it into a real field with the Field Calculator; population stayed a virtual join and evaporated at export. The number the project manager actually wanted is the one that did not travel. Fix: materialise the join (right-click → Export → Save Features As → GeoPackage) or copy it into a real column, re-export, and <strong>verify by reading the exported <code>data/*.js</code>, not by looking at QGIS.</strong></p>
+        <p><strong>2. The basemap only exists on my machine.</strong> One tile layer in <code>index.html</code>, URL <code>http://localhost:8000/...</code>, empty attribution string. So the honest version of "self-contained" is: the <em>data and the interface</em> are portable; the tiles are not.</p>
+        <p>The test that catches both, and the one to run before you submit: copy the folder to a USB stick, open it on a different machine, turn the network off, and click three districts. If the numbers you were asked for appear, it passes.</p>
         <p>The deliverable is the <strong>whole folder zipped</strong>, not the single HTML file — the HTML needs its <code>js/</code>, <code>css/</code> and <code>data/</code> siblings. The recipient unzips it, double-clicks <code>index.html</code>, and the map opens in Chrome, Firefox, Edge or Safari. No QGIS, no install, no internet.</p>
 
         <h2>What We Did Live — Scrub Guide</h2>
         <ul style="margin: 0.5rem 0 1rem 1.5rem;">
             <li><strong>00:00 Welcome &amp; recap</strong> — print layouts and Atlas, then why a web map</li>
-            <li><strong>02:50 What is web mapping?</strong> — static vs interactive, audience, HTML/CSS/JS</li>
-            <li><strong>10:58 New project</strong> — states + districts, custom XYZ basemap (avoid OSM/CORS)</li>
-            <li><strong>15:11 Population join</strong> — CSV table → <code>admin2_districts</code> on the district name</li>
-            <li><strong>16:41 Field Calculator</strong> — area m&sup2;, area km&sup2;, population density</li>
-            <li><strong>20:55 Graduated symbology</strong> — 5 classes, Natural Breaks (Jenks)</li>
-            <li><strong>22:36 Attribute Form</strong> — aliases and drag-and-drop order</li>
-            <li><strong>25:40 qgis2web</strong> — install, Layers &amp; Groups, Appearance</li>
-            <li><strong>30:46 Leaflet export</strong> — zoom 2–20, popups, layer control</li>
-            <li><strong>31:11 Verify offline</strong> — open <code>index.html</code>, click a district, tour the folder</li>
-            <li><strong>36:31 Wrap up</strong> — zip the folder, hand it over, next week the Capstone</li>
+            <li><strong>~07:40 Open the project</strong> — states + districts, custom XYZ basemap on <code>localhost:8000</code></li>
+            <li><strong>13:00 Joins</strong> — Layer Properties → Joins on <code>admin2_districts</code></li>
+            <li><strong>~18:00 Field Calculator</strong> — area (<code>area_sqm</code>, <code>area_sqKM</code>), then population density</li>
+            <li><strong>21:00 Attribute table</strong> — area and density columns checked</li>
+            <li><strong>23:00 Graduated symbology</strong> — 5 classes, Natural Breaks (Jenks)</li>
+            <li><strong>26:00 Attribute Form</strong> — clean field names and aliases</li>
+            <li><strong>29:00 Plugins</strong> — qgis2web confirmed installed</li>
+            <li><strong>33:00 Export to web map</strong> — Leaflet, layers list collapsed, measure on, min zoom 1</li>
+            <li><strong>34:30 Export written</strong> — <code>qgis2web_2026_11_01-08_25_40_470697</code></li>
+            <li><strong>37:00 Verify</strong> — <code>index.html</code> in the browser (blank until it is served)</li>
+            <li><strong>39:00 Local server</strong> — <code>python3 -m http.server</code> in the export folder</li>
+            <li><strong>41:00 Zip</strong> — <code>webmapping_template.zip</code>, 1.1 MB</li>
+            <li><strong>43:20 Wrap up</strong> — next week the Capstone briefing</li>
         </ul>
 
         <h2>Common Hang-ups and Fixes</h2>
         <ol style="margin: 0.5rem 0 1rem 1.5rem;">
             <li><strong>Blank page after export:</strong> the path has spaces or special characters, or <code>index.html</code> was separated from its <code>js/</code> and <code>data/</code> folders. Export to a clean path and keep the folder intact.</li>
+            <li><strong>A column is missing in the web map but present in QGIS:</strong> it was a virtual join. Materialise it and re-export.</li>
+            <li><strong>Districts on a blank background:</strong> your tile URL points at <code>localhost</code>. Export with no basemap and a background colour, or ship the tiles.</li>
             <li><strong>Basemap missing / CORS errors:</strong> the XYZ tiles need the internet or are rate-limited. Use your own tile source or export without tiles and set a background colour.</li>
             <li><strong>Popups are empty:</strong> popup fields were not enabled for the layer, or you clicked the basemap. Set the district layer to <em>Inline Label</em> and re-export.</li>
             <li><strong>Raw field names in the popup:</strong> the Attributes Form aliases were not set (or the export predates them). Set aliases and re-export.</li>
@@ -151,8 +175,8 @@
 
         <h2>What You Should Have Now</h2>
         <ul style="margin: 0.5rem 0 1rem 1.5rem;">
-            <li><code>Week08_WebMap.qgz</code> — the project with a simple, web-ready layer stack</li>
-            <li><code>districts_population.gpkg</code> — districts with <code>Area_sqM</code>, <code>Area_sqKM</code>, <code>POP_Density_perSKM</code></li>
+            <li><code>training_webmapping_20261101.qgz</code> — the project with a simple, web-ready layer stack</li>
+            <li><code>districts_population.gpkg</code> — districts with <code>area_sqm</code>, <code>area_sqKM</code>, a real <code>population</code> column and <code>Pop_Density_pSqKM</code></li>
             <li>A <strong>graduated</strong> district map (5 Natural Breaks classes on density)</li>
             <li>A clean <strong>attribute form</strong> with human-readable aliases</li>
             <li>A <strong>qgis2web / Leaflet</strong> folder that opens offline via <code>index.html</code></li>
@@ -161,7 +185,10 @@
         <p><strong>Deliverable reminder:</strong> this is <strong>Project 5B</strong> — one quiz plus one practical lab, graded. Submit the zipped folder, not just a screenshot of the map.</p>
 
         <h2>What's Next</h2>
-        <p><strong>The final class — Capstone: Engineering Site Suitability Assessment.</strong> For your own town: query real attribute conditions, buffer a 50–100 m safety setback, clip the structures inside it, add population context, then deliver a PDF map sheet and an offline <code>qgis2web</code> folder. Everything from Weeks 1–8, end to end, on your own data. The final session also includes student participation and wrapping up the Capstone projects — thank you to everyone who attended, asked questions and built along the way.</p>
+        <p><strong>The final session, Sunday 8 November.</strong> The capstone briefing: five ready-made projects on the Sudan data — humanitarian logistics, flood shelter siting, clinic accessibility, road–waterway crossings, agricultural slope suitability — plus a sixth slot for a question from your own work. Every one of them ends in the same two products: a print map sheet and an offline web map, exactly what Weeks 7 and 8 built.</p>
+        <p><strong>Next in the series:</strong> <a href="blog-week9-capstone-briefing-final-session.html">Session 9 — Capstone Briefing &amp; Final Session</a>, recorded live (37:22) with all six options, the submission folder and the deadline window.</p>
+        <p><strong>The deadline is three months: Sunday 7 February 2027, 23:00</strong>, for the capstone <em>and</em> any quizzes or labs you still owe. Life and work happen during a semester, and a course that punishes them is not a fair course. The standard does not move with the date — same six components, same weights, same defence in front of the group.</p>
+        <p>Thank you to everyone who attended, asked the questions that stopped the class, and built along the way. Everything here runs on free and open-source software — QGIS, GDAL, the Linux desktop — and open data from OpenStreetMap, OCHA HDX, WorldPop and NASA SRTM, which is the only reason a course like this can exist at all.</p>
 
         <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--gray); font-size: 0.9rem;"><strong>Resources:</strong> Course site <a href="https://saltco.org">saltco.org</a> · YouTube <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">@saltcoTraining</a> · Software QGIS (free &amp; open source, no internet required after setup) · Previous: <a href="blog-week7-professional-print-layouts-atlas.html">Week 7 — Professional Print Layouts &amp; Atlas</a> · Full step-by-step in <code>LAB_GUIDE_week8_web_mapping.md</code>.</p>
 
