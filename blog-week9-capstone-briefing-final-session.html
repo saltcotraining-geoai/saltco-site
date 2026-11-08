@@ -99,11 +99,12 @@
         <p>Those counts are not trivia. They are the reason four of the five set options start with <strong>filter first, buffer second</strong>: buffering 455,065 roads or 32,805 water lines will lock a laptop for an afternoon and produce an answer nobody asked for.</p>
 
         <h2>Reality Check — What This Data Will Not Do</h2>
-        <p>This was the most valuable slide in the session, and the section most likely to save a weekend. Five honest limits:</p>
+        <p>This was the most valuable slide in the session, and the section most likely to save a weekend. Six honest limits:</p>
         <ol style="margin: 0.5rem 0 1rem 1.5rem;">
             <li><strong>There are no "public buildings".</strong> <code>buildings.fclass</code> is <code>building</code> for all 1,725,098 rows and <code>name</code> is empty. You cannot query for schools, clinics or mosques. Siting a facility has to be argued from road proximity, elevation and population — and that reasoning has to be written down.</li>
             <li><strong>Do not buffer all the water.</strong> <code>rivers_waterways</code> contains streams and drains. <code>"fclass" IN ('river','canal')</code> gives 8,596 lines, and that is what a flood setback actually means.</li>
             <li><strong>The DEM is in degrees.</strong> <code>srtm_sudan.tif</code> is EPSG:4326. Slope computed on a geographic raster is meaningless — and it looks plausible, which is worse. Warp to EPSG:32636 first. This is a graded defence question.</li>
+            <li><strong>Two data folders are symlinks.</strong> <code>01_Data/training_utm36n/*.gpkg</code> and <code>03_Population_Raster/*</code> point into the master tree. Copied with <code>cp -a</code>, <code>rsync -a</code> or <code>tar</code>, they arrive as broken links — test one drive before the class.</li>
             <li><strong>No SAGA and no GRASS in your QGIS.</strong> Checked on 3.44.15: 391 processing algorithms, none from those providers. Anything you propose has to run on the native and GDAL providers, not on a package installed the night before.</li>
             <li><strong>Work in copies, never on the masters.</strong> The training editions have trimmed fields; the masters keep everything. And keep the CRS rule: UTM 36N for anything measured in metres, WGS 84 for the qgis2web export.</li>
         </ol>
