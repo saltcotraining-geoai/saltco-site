@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boolean vs MCE for Site Selection: What Changes When You Rank Sites? — saltco</title>
+    <meta name="description" content="Boolean screening says yes or no; MCE ranks the options. A practical QGIS + PyQGIS comparison with AHP weights, sensitivity checks and a real Swellendam dataset.">
+    <link rel="canonical" href="https://saltco.org/blog-site-selection-v2-boolean-vs-weighted.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="saltco">
+    <meta property="og:title" content="Boolean vs MCE for Site Selection: What Changes When You Rank Sites?">
+    <meta property="og:description" content="Same 4,708 buildings. Same five rules. Two defensible methods picked only six sites in common — and the disagreement is the most useful part of the analysis.">
+    <meta property="og:url" content="https://saltco.org/blog-site-selection-v2-boolean-vs-weighted.html">
+    <meta property="og:image" content="https://saltco.org/images/site-selection-v2-thumbnail.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="saltco Blog" href="feed.xml">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Page-only styles for this post: tables, callouts, figures, code. */
+        .post p { margin-bottom: 0.85rem; }
+        .post ul, .post ol { margin: 0.5rem 0 1rem 1.5rem; }
+        .post li { margin: 0.2rem 0; }
+        .post h3 { color: var(--primary); margin: 1.25rem 0 0.4rem; font-size: 1.1rem; }
+        .post .table-wrap { overflow-x: auto; margin: 1rem 0 1.5rem; }
+        .post table { border-collapse: collapse; width: 100%; font-size: 0.9rem; background: var(--white); }
+        .post caption { text-align: left; font-weight: 600; color: var(--primary); padding-bottom: 0.4rem; }
+        .post th, .post td { border: 1px solid var(--border); padding: 0.45rem 0.65rem; text-align: left; vertical-align: top; }
+        .post thead th { background: var(--primary); color: var(--white); }
+        .post tbody th { background: var(--light); }
+        .post tbody tr:nth-child(even) td { background: #fbfcfe; }
+        .post .callout { background: var(--light); border: 1px solid var(--border); border-left: 4px solid var(--secondary); border-radius: 6px; padding: 0.9rem 1.2rem; margin: 1.25rem 0; }
+        .post .callout--key { border-left-color: var(--accent); background: #f0faf9; }
+        .post .callout--cta { border-left-color: #b5620b; background: #fff7ee; }
+        .post .callout p { margin-bottom: 0.4rem; }
+        .post figure { margin: 1.5rem 0; }
+        .post figure img, .post .video-link img { width: 100%; height: auto; display: block; border: 1px solid var(--border); border-radius: 6px; }
+        .post figcaption { font-size: 0.85rem; color: var(--gray); margin-top: 0.4rem; }
+        .post code { background: var(--light); border: 1px solid var(--border); border-radius: 3px; padding: 0 0.25rem; font-size: 0.88em; }
+        .post pre { background: #1e2a3a; color: #e2e8f0; border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 0.75rem 0 1.25rem; font-size: 0.85rem; line-height: 1.5; }
+        .post pre code { background: none; border: 0; padding: 0; color: inherit; }
+        .post .chapters { columns: 2; column-gap: 2rem; }
+        .post .chapters a { font-variant-numeric: tabular-nums; font-weight: 600; margin-right: 0.35rem; }
+        .post hr { border: 0; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+        .post .video-link { display: block; position: relative; margin: 1rem 0 1.5rem; }
+        @media (max-width: 640px) { .post .chapters { columns: 1; } .article h1 { font-size: 1.6rem; } }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/saltco-badge.svg" alt="saltco logo">
+        <span class="brand-text">
+            <span class="brand-name">salt<span>co</span></span>
+            <span class="brand-tagline">Computing &amp; Capacity Building</span>
+        </span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="learning-paths.html">Learning Paths</a>
+        <a href="courses.html">Courses</a>
+        <a href="blog.html">Blog</a>
+        <a href="projects.html">Projects</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="about.html">About</a>
+        <a href="support.html">Support</a>
+    </div>
+</nav>
+
+<main class="container">
+    <article class="article post">
+        <span class="date">27 Nov 2026 — QGIS + AI: Automated Site Selection · Part 2 of 3</span>
+        <h1>Boolean vs MCE for Site Selection: What Changes When You Rank Sites?</h1>
+        <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1rem;"><em>12 min read · QGIS 3.44 + PyQGIS · 61:20 video · <a href="https://youtu.be/OkVrB1ngHrk" target="_blank" rel="noopener">Watch on YouTube</a> · <a href="https://github.com/saltcotraining-geoai/qgis-ai-site-selection/releases/tag/v2.0.0" target="_blank" rel="noopener">Code (v2.0.0)</a></em></p>
+
+        <p><strong>Same 4,708 buildings. Same five rules. Two defensible methods picked only six sites in common — and the disagreement is the most useful part of the analysis.</strong></p>
+
+        <a class="video-link" href="https://youtu.be/OkVrB1ngHrk" target="_blank" rel="noopener" aria-label="Watch the video on YouTube">
+            <img src="images/site-selection-v2-thumbnail.png" width="1280" height="720" alt="Video thumbnail: YES/NO vs WEIGHTED, multi-criteria site selection with QGIS and PyQGIS.">
+        </a>
+
+        <p>Site selection is often taught as a filter: buffer, overlay, done. That works when every rule is a legal limit. It fails when the rules are preferences. This article compares <strong>Boolean screening</strong> and <strong>multi-criteria evaluation (MCE)</strong> on the same dataset, with the same five rules, and shows where the answers diverge and why.</p>
+
+        <p>It accompanies the second video in the <em>QGIS + AI: Automated Site Selection</em> series. The code is free (MIT licence), the data is open (ODbL), and every number below comes from a full run of release v2.0.0. New to buffers and overlays? Start with <a href="blog-week5-spatial-proximity-multi-criteria-analysis.html">Week 5: Spatial Proximity &amp; Multi-Criteria Analysis</a>.</p>
+
+<div class="callout callout--key">
+  <p><strong>The 30-second answer</strong></p>
+  <ul>
+    <li><strong>Boolean screening</strong> answers <em>“Is the site allowed?”</em> It returns a set: yes or no. Best when every rule is a regulation, a safety minimum or a physical limit.</li>
+    <li><strong>MCE</strong> answers <em>“How good is the site?”</em> It keeps the true limits as constraints, turns the preferences into weighted 0–1 scores, and returns a ranking. Best when criteria trade off.</li>
+    <li>On the Swellendam data: <strong>9</strong> Boolean sites, <strong>22</strong> MCE candidates, <strong>9</strong> selected, <strong>6</strong> chosen by both.</li>
+    <li>The disagreement is not a bug. It is a policy question: <strong>is 300 m from a river a regulation or a preference?</strong></li>
+    <li>Make it a 300 m constraint in MCE and the two methods agree <strong>9 out of 9</strong>.</li>
+  </ul>
+</div>
+
+<h2>The question, the data and the five rules</h2>
+
+<p>The question is deliberately ordinary: <strong>which existing buildings in Swellendam could host a new community facility?</strong> It is the kind of question a municipality, NGO or campus planner asks before a site visit. The answer depends on five rules:</p>
+
+<div class="table-wrap"><table>
+  <caption>Table 1. The Boolean screening rules</caption>
+  <thead>
+    <tr><th scope="col">Rule</th><th scope="col">Threshold</th><th scope="col">Why it is there</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>A. Footprint area</td><td>800–1,200 m²</td><td>The building must fit the use</td></tr>
+    <tr><td>B. Distance to a school</td><td>≤ 1,000 m</td><td>Accessibility</td></tr>
+    <tr><td>C. Distance to a main highway</td><td>&gt; 100 m</td><td>Safety and noise</td></tr>
+    <tr><td>D. Distance to a river</td><td>&gt; 300 m</td><td>Flood risk</td></tr>
+    <tr><td>E. Urban area</td><td>Footprint intersects an urban polygon</td><td>Development context</td></tr>
+  </tbody>
+</table></div>
+
+<p>The data is the QGIS Training Manual exercise dataset for Swellendam, South Africa: <strong>4,708 building footprints</strong>, 4 schools, 716 road segments (74 of them main highways), 6 river features and 3 urban polygons, © OpenStreetMap contributors (ODbL). Everything is reprojected to <strong>EPSG:32734</strong> (WGS 84 / UTM 34S), so areas and distances are planar metres.</p>
+
+<p>Four assumptions matter more than the software:</p>
+
+<ul>
+  <li><strong>Footprints, not parcels.</strong> The candidates are building footprints. A selected footprint is never cut, and the analysis cannot tell you whether the land is vacant or developable.</li>
+  <li><strong>Urban is not zoning.</strong> The urban polygons are cadastral/erf-derived. They show urban context, not permitted land use.</li>
+  <li><strong>Distances are measured from the footprint edge</strong>, not the centroid. A building touching a road has distance 0.</li>
+  <li><strong>OSM is a snapshot.</strong> A missing school, road or river changes the answer. The data is not ground truth.</li>
+</ul>
+
+<h2>Boolean screening: clarity, and the knife edge</h2>
+
+<p>Boolean screening applies every rule as a hard yes/no and keeps only the buildings that pass all of them. The cascade is brutally effective:</p>
+
+<p><strong>4,708 buildings → 27 (area) → 21 (school) → 20 (highway) → 9 (river) → 9 (urban).</strong></p>
+
+<p>The river rule does most of the work: it removes <strong>11 of the 20</strong> remaining candidates. That is the first clue about what will happen later.</p>
+
+<p>The strength of this method is that you can defend every rejection. A building is out because it is 780 m², or 1,040 m from a school, or 270 m from a river. There is no hidden weighting, no model to explain, no score to argue about. For a statutory setback or a safety minimum, that is exactly what you want.</p>
+
+<p>The weakness appears at the boundary. Building <strong>194655366</strong> is 270 m from the river. The rule says 300 m. It fails by 30 m, even though it is 407 m from a school and 809 m from a highway. Another building that fails every rule badly is treated the same way: rejected. And the nine survivors are all equally “yes”. There is no way to say that one is a better candidate than another.</p>
+
+<div class="callout">
+  <p><strong>The knife-edge problem.</strong> A threshold turns a continuous measurement into a binary decision. That is useful for a regulation and dangerous for a preference. The question is not “which side of 300 m is it?” but “why is 300 m the line?”</p>
+</div>
+
+<h2>MCE: separating “allowed” from “good”</h2>
+
+<p>Multi-criteria evaluation starts by splitting the rules into two kinds.</p>
+
+<p><strong>Constraints</strong> are the true limits: is the building allowed at all? They stay yes/no. In this project: area 800–1,200 m², urban area, a <strong>100 m river setback</strong> for flood safety, and a <strong>25 m highway setback</strong> for road safety. The cascade is <strong>27 → 25 → 22 → 22</strong>.</p>
+
+<p><strong>Factors</strong> are the preferences: how good is the site? They become a score from 0 to 1. Closer to a school is better; farther from a highway or river is better.</p>
+
+<div class="table-wrap"><table>
+  <caption>Table 2. Constraints and factors in the v2.0.0 run</caption>
+  <thead>
+    <tr><th scope="col">Rule</th><th scope="col">Boolean treatment</th><th scope="col">MCE treatment</th><th scope="col">MCE values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Area</td><td>800–1,200 m²</td><td>Constraint</td><td>800–1,200 m²</td></tr>
+    <tr><td>Urban area</td><td>Intersects</td><td>Constraint</td><td>Intersects</td></tr>
+    <tr><td>River</td><td>&gt; 300 m</td><td>Constraint + factor</td><td>Setback 100 m; score 0 at 100 m, 1 at 1,000 m</td></tr>
+    <tr><td>Highway</td><td>&gt; 100 m</td><td>Constraint + factor</td><td>Setback 25 m; score 0 at 25 m, 1 at 500 m</td></tr>
+    <tr><td>School</td><td>≤ 1,000 m</td><td>Factor only</td><td>Score 1 at 0 m, 0 at 1,500 m</td></tr>
+  </tbody>
+</table></div>
+
+<p>The setbacks are smaller than the Boolean distances on purpose. The setback is the safety minimum; everything beyond it is a preference, and the factor scores it. The school factor also has a wider range than the Boolean rule: a building at 1,060 m is no longer thrown out; it scores 0.29.</p>
+
+<h3>Turning distances into 0–1 scores</h3>
+
+<p>Each factor uses linear membership:</p>
+
+<p><code>score = (distance − zero_at_m) / (one_at_m − zero_at_m)</code>, clamped between 0 and 1.</p>
+
+<p>Worked example, building <strong>195565002</strong>:</p>
+
+<ul>
+  <li>School: 0 m → <strong>1.000</strong></li>
+  <li>Highway: 187 m → (187 − 25) / 475 = <strong>0.341</strong></li>
+  <li>River: 132 m → (132 − 100) / 900 = <strong>0.036</strong></li>
+</ul>
+
+<p>With the weights below, its total score is <strong>0.675</strong> — exactly what the dashboard shows.</p>
+
+<h3>Weights with AHP</h3>
+
+<p>Which factor matters most? Instead of guessing percentages, the <strong>Analytic Hierarchy Process (AHP)</strong> asks easier questions, two factors at a time, on Saaty's 1–9 scale:</p>
+
+<div class="table-wrap"><table>
+  <caption>Table 3. The 3 × 3 pairwise matrix</caption>
+  <thead>
+    <tr><th scope="col">Criterion</th><th scope="col">School</th><th scope="col">Highway</th><th scope="col">River</th></tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row">School</th><td>1</td><td>3</td><td>3</td></tr>
+    <tr><th scope="row">Highway</th><td>1/3</td><td>1</td><td>1</td></tr>
+    <tr><th scope="row">River</th><td>1/3</td><td>1</td><td>1</td></tr>
+  </tbody>
+</table></div>
+
+<p>School is moderately more important than highway (3) and than river (3); highway and river are equally important (1). The derived weights are <strong>school 0.60, highway 0.20, river 0.20</strong>, with a <strong>consistency ratio of 0.00</strong>.</p>
+
+<p>A consistency ratio below 0.10 is acceptable. Ours is 0.00 because the judgements are perfectly transitive: 3, 3 and 1 cannot contradict each other. That is a coherence check, <strong>not</strong> evidence that the weights are right. The weights are a decision. Agree on them with the people who will use the result.</p>
+
+<h3>Score, rank, select, stress-test</h3>
+
+<p>The weighted linear combination is simply:</p>
+
+<p><code>mce_score = 0.60 × school + 0.20 × highway + 0.20 × river</code></p>
+
+<p>All 22 eligible buildings are scored and ranked. The top <strong>9</strong> are selected — the same number as the Boolean result, so the comparison is fair. The selection is a deliberate choice (<code>match_boolean</code>), not a natural break in the scores: rank 9 scores 0.675 and rank 10 scores 0.644.</p>
+
+<p>The script then tests the weights. Each weight is raised and lowered by 20%, six scenarios in total, and the sites are re-selected. Five scenarios keep all nine sites; only “school −20%” swaps one. The <strong>mean stability is 0.981</strong>. The site that drops out, rank 9, has a stability of <strong>0.833</strong>. It sits on the cut-off, which is exactly the site to discuss with decision-makers.</p>
+
+<h2>The comparison: 6 / 3 / 3</h2>
+
+<p>Put the two results side by side and the disagreement is small but meaningful:</p>
+
+<div class="table-wrap"><table>
+  <caption>Table 4. Agreement between Boolean screening and MCE</caption>
+  <thead>
+    <tr><th scope="col">Agreement</th><th scope="col">Sites</th><th scope="col">What it means</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Both</strong></td><td>6</td><td>Pass every Boolean rule and rank 1–6 in MCE. The strongest candidates.</td></tr>
+    <tr><td><strong>MCE only</strong></td><td>3</td><td>Fail the Boolean 300 m river rule; ranks 7–9 in MCE. Rivers: 132 m, 173 m, 270 m.</td></tr>
+    <tr><td><strong>Boolean only</strong></td><td>3</td><td>Pass every rule but rank 15–17 in MCE: two are 863 m and 933 m from a school; one is 138 m from a highway.</td></tr>
+  </tbody>
+</table></div>
+
+<figure>
+  <img src="images/site-selection-v2-mce-scores.svg" alt="Bar chart of MCE scores for the 12 buildings in the comparison. Six buildings chosen by both methods score 0.75 to 0.98; three MCE-only buildings score 0.675 to 0.686; three Boolean-only buildings score 0.484 to 0.539. The MCE cut-off is after the ninth building." width="960" height="560">
+  <figcaption>Figure 1. The 12 buildings in the comparison. The six consensus sites are clearly ahead; the disagreement is concentrated in the river-near sites and the lower-ranked Boolean-only sites. Source: v2.0.0 outputs.</figcaption>
+</figure>
+
+<p>The six consensus sites are robust. They pass every rule and rank high, and they stay selected under every ±20% weight scenario. If you need one shortlist to take to a meeting, start there.</p>
+
+<p>The three MCE-only sites are the interesting ones. All three fail <em>only</em> the Boolean river rule: 132 m, 173 m and 270 m from a river. One is next to a school (0 m); the other two are 326 m and 407 m away. All three are at least 187 m from a highway. MCE keeps them because the 100 m flood setback is the constraint and the distance beyond it is a preference.</p>
+
+<p>The three Boolean-only sites pass every rule but rank 15–17 in MCE. Two are far from a school (863 m and 933 m, school scores 0.42 and 0.38); one is close to a highway (138 m, highway score 0.24). They are legal, but they are not the best options once access and noise are weighted.</p>
+
+<h2>Why the methods disagree</h2>
+
+<p>The disagreement is created by the river threshold. It is amplified by the school weight.</p>
+
+<p><strong>The threshold.</strong> Boolean says 300 m is the line. MCE says 100 m is the legal minimum and everything beyond it is a score. The three MCE-only sites sit in that gap. If 300 m is a regulation, they should be excluded. If it is a preference, excluding them is arbitrary.</p>
+
+<p><strong>The weight.</strong> School carries 0.60 of the MCE score. The three MCE-only sites are 0 m, 326 m and 407 m from a school; the three Boolean-only sites are 475 m, 863 m and 933 m. That is why the river-near sites can rank above buildings that pass every Boolean rule.</p>
+
+<div class="callout">
+  <p><strong>The question to ask in the meeting:</strong> “Is 300 m from a river a regulation or a preference?” If it is a regulation, make it a constraint. If it is a preference, say so — and accept that the ranking will keep sites between 100 m and 300 m.</p>
+</div>
+
+<h2>What if you change the rules?</h2>
+
+<p>This is where the method earns its keep. Because every rule lives in <code>config.json</code>, you can test the decision instead of defending a screenshot. These results come from the v2.0.0 criteria matrix; change one value, re-run, and compare.</p>
+
+<div class="table-wrap"><table>
+  <caption>Table 5. What-if results (v2.0.0 criteria matrix)</caption>
+  <thead>
+    <tr><th scope="col">Change</th><th scope="col">Boolean sites</th><th scope="col">Both / MCE only / Boolean only</th><th scope="col">Stability</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Baseline</td><td>9</td><td>6 / 3 / 3</td><td>0.981</td></tr>
+    <tr><td>Boolean river rule 300 → 200 m</td><td>13</td><td>9 / 4 / 4</td><td>0.949</td></tr>
+    <tr><td>Boolean river rule 300 → 100 m</td><td>17</td><td>16 / 1 / 1</td><td>0.980</td></tr>
+    <tr><td>Boolean river rule 300 → 500 m</td><td>3</td><td>3 / 0 / 0</td><td>1.000</td></tr>
+    <tr><td>School rule 1,000 → 1,200 m</td><td>9</td><td>6 / 3 / 3</td><td>0.981</td></tr>
+    <tr><td>MCE river setback 100 → 300 m</td><td>9</td><td><strong>9 / 0 / 0</strong></td><td>1.000</td></tr>
+    <tr><td>AHP highway/river 1 → 3</td><td>9</td><td>6 / 3 / 3 (one swap)</td><td>0.963</td></tr>
+    <tr><td>MCE selects top 12 instead of 9</td><td>9</td><td>6 / 6 / 3</td><td>0.972</td></tr>
+  </tbody>
+</table></div>
+
+<p>Three lessons:</p>
+
+<ol>
+  <li><strong>The river rule is the decisive rule in this town.</strong> Relax it to 200 m and the Boolean answer grows from 9 to 13. Tighten it to 500 m and it falls to 3.</li>
+  <li><strong>Not every rule is binding.</strong> Loosening the school rule from 1,000 m to 1,200 m adds a candidate at step B, but the final result stays 9: the extra building fails the river rule.</li>
+  <li><strong>Make the river a regulation in both methods and they agree completely.</strong> With a 300 m MCE setback, 10 buildings remain eligible and the top 9 are exactly the Boolean 9. The disagreement was never about the maths; it was about the status of the threshold.</li>
+</ol>
+
+<p>Changing the AHP judgement <code>highway/river</code> from 1 to 3 produces weights 0.584 / 0.281 / 0.135 and a consistency ratio of <strong>0.117</strong> — above the 0.10 threshold. The script still runs, but it warns you: the judgements contradict each other (school is 3 × highway, school is 3 × river, yet highway is 3 × river). That is AHP doing its job.</p>
+
+<h2>Boolean vs MCE: side by side</h2>
+
+<div class="table-wrap"><table>
+  <caption>Table 6. The two methods compared</caption>
+  <thead>
+    <tr><th scope="col">Question</th><th scope="col">Boolean screening</th><th scope="col">MCE (WLC + AHP)</th></tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row">What it answers</th><td>Is the site allowed?</td><td>How good is the site, relative to the others?</td></tr>
+    <tr><th scope="row">Output</th><td>A set of feasible sites</td><td>A ranked shortlist, with scores</td></tr>
+    <tr><th scope="row">Handles trade-offs</th><td>No. Every rule counts the same.</td><td>Yes. A strong factor can compensate a weak one.</td></tr>
+    <tr><th scope="row">Near-misses</th><td>Rejected, however good the other criteria</td><td>Scored; may still rank high</td></tr>
+    <tr><th scope="row">Transparency</th><td>Very high: one rule, one rejection reason</td><td>High, but the weights and factor ranges must be explained</td></tr>
+    <tr><th scope="row">Stakeholder role</th><td>Agree on the rules</td><td>Agree on the rules <em>and</em> the weights</td></tr>
+    <tr><th scope="row">Typical use</th><td>Statutory setbacks, safety minima, eligibility</td><td>Shortlisting, prioritisation, participatory decisions</td></tr>
+    <tr><th scope="row">Main failure mode</th><td>Arbitrary thresholds and no ranking</td><td>Weights treated as truth; compensation hides a fatal weakness</td></tr>
+  </tbody>
+</table></div>
+
+<h2>How to choose</h2>
+
+<p>Ask five questions:</p>
+
+<ol>
+  <li><strong>Is the threshold a law, a safety minimum or a physical limit?</strong> If yes, it is a constraint. Use Boolean for that rule, or put it in the MCE constraint set.</li>
+  <li><strong>Do the criteria trade off?</strong> If a site can be a little farther from a school and still be better because it is far from a highway, you need MCE.</li>
+  <li><strong>Do you need a ranking or just eligibility?</strong> If the answer is “these are the eligible sites”, Boolean is enough. If it is “which three should we visit first?”, you need a ranking.</li>
+  <li><strong>Can stakeholders agree on weights?</strong> If not, use Boolean for the hard rules and present the MCE ranking as a sensitivity-tested scenario, not a verdict.</li>
+  <li><strong>Do you need to defend a rejection?</strong> Boolean gives you a one-line reason. MCE gives you a score, which is more nuanced but easier to dispute.</li>
+</ol>
+
+<p><strong>The hybrid workflow I recommend:</strong></p>
+
+<ol>
+  <li>Codify the legal and safety limits as constraints.</li>
+  <li>Turn the preferences into factors with defensible ranges.</li>
+  <li>Elicit weights with the people who will use the result; check the consistency ratio.</li>
+  <li>Score, rank and select.</li>
+  <li>Stress-test the thresholds and the weights.</li>
+  <li>Compare with the Boolean result and investigate every disagreement.</li>
+  <li>Publish the decision record: rules, ranges, weights, CR, sensitivity and data caveats.</li>
+</ol>
+
+<p>Use Boolean when every rule is a regulation. Use MCE when the criteria are preferences. Use both when the decision matters: the consensus set is your shortlist, and the disagreements are your agenda.</p>
+
+<h2>Common mistakes</h2>
+
+<ol>
+  <li><strong>Turning a preference into a regulation.</strong> A 300 m river buffer may be a policy choice, not a legal limit. If you make it a constraint, say why.</li>
+  <li><strong>Forgetting that thresholds are values.</strong> “100 m from a highway” is a decision about noise and safety, not a fact of nature.</li>
+  <li><strong>Choosing factor ranges arbitrarily.</strong> The school factor's 1,500 m range determines the scores as much as the 0.60 weight does.</li>
+  <li><strong>Reading the consistency ratio as truth.</strong> CR ≤ 0.10 means the judgements are coherent, not correct. A perfectly consistent matrix can still encode bad priorities.</li>
+  <li><strong>Forcing a top-N cut.</strong> Selecting 9 because Boolean found 9 is useful for comparison, but it is not a natural break. In a real decision, use a score threshold, a budget or a natural gap — and say which.</li>
+  <li><strong>Ignoring spatial redundancy.</strong> Nine buildings are not nine independent sites. In this run, ranks 7 and 8 are 92 m apart; ranks 4 and 5 are 147 m; ranks 6 and 8 are 143 m. A shortlist should consider whether neighbouring buildings are one opportunity or several.</li>
+  <li><strong>Treating footprints as parcels, or urban polygons as zoning.</strong> The analysis tells you about buildings and context, not land ownership or permitted use.</li>
+  <li><strong>Not documenting the decision.</strong> A map without the rules, weights, CR and sensitivity is not reproducible. The value is in the record, not the screenshot.</li>
+</ol>
+
+<h2>Reproduce it</h2>
+
+<p>The full workflow is free and open source: QGIS 3.44.16 (the scripts are also tested on QGIS 3.40 LTR), PyQGIS, Python 3 and folium. It runs offline once the data is downloaded.</p>
+
+<pre><code>git clone https://github.com/saltcotraining-geoai/qgis-ai-site-selection
+cd qgis-ai-site-selection
+python3 -m pip install folium
+
+# Phase 0 → 1 → 2 → 2b → 3
+python3 demo.py
+
+# Boolean only (as in Part 1)
+python3 demo.py --skip-mce</code></pre>
+
+<p>The settings live in <code>config.json</code>. The MCE section looks like this:</p>
+
+<pre><code>"mce": {
+  "constraints": {
+    "area":    { "enabled": true, "min_sqm": 800, "max_sqm": 1200 },
+    "urban":   { "enabled": true, "relation": "intersects" },
+    "river_setback":   { "enabled": true, "distance_m": 100 },
+    "highway_setback": { "enabled": true, "distance_m": 25 }
+  },
+  "factors": {
+    "school":  { "zero_at_m": 1500, "one_at_m": 0 },
+    "highway": { "zero_at_m": 25,   "one_at_m": 500 },
+    "river":   { "zero_at_m": 100,  "one_at_m": 1000 }
+  },
+  "weights": {
+    "method": "ahp",
+    "ahp_pairwise": {
+      "school/highway": 3,
+      "school/river": 3,
+      "highway/river": 1
+    }
+  },
+  "selection": { "method": "match_boolean" },
+  "sensitivity": { "enabled": true, "weight_change": 0.2 }
+}</code></pre>
+
+<p>Expected output: Boolean <strong>27 → 21 → 20 → 9 → 9</strong>; MCE constraints <strong>27 → 25 → 22 → 22</strong>; weights <strong>0.60 / 0.20 / 0.20</strong>; CR <strong>0.000</strong>; <strong>22</strong> scored; <strong>9</strong> selected; agreement <strong>6 / 3 / 3</strong>; mean stability <strong>0.981</strong>.</p>
+
+<p><a href="https://github.com/saltcotraining-geoai/qgis-ai-site-selection/releases/tag/v2.0.0">Download release v2.0.0</a> · <a href="https://github.com/saltcotraining-geoai/qgis-ai-site-selection">Repository and README</a></p>
+
+<h2>FAQ</h2>
+
+<h3>Is MCE better than Boolean screening?</h3>
+<p>No. They answer different questions. Boolean is better when every rule is a regulation and you need an auditable yes/no. MCE is better when criteria are preferences and you need a ranking. The mistake is using one for the other's job.</p>
+
+<h3>What is AHP, in one paragraph?</h3>
+<p>The Analytic Hierarchy Process derives weights from pairwise comparisons on a 1–9 scale. Instead of asking “what percentage should school get?”, it asks “is school more important than highway, and by how much?”. It also computes a consistency ratio, which flags contradictory judgements.</p>
+
+<h3>What consistency ratio is acceptable?</h3>
+<p>CR ≤ 0.10 is the usual threshold for a 3 × 3 matrix. Our default is 0.00 because the judgements are perfectly transitive. A good CR means the judgements are coherent, not that they are right.</p>
+
+<h3>Why nine sites?</h3>
+<p>Because the Boolean result has nine, and the comparison is fair only if both methods select the same number. It is not a natural break: rank 9 scores 0.675, rank 10 scores 0.644. In a real project, choose the cut for a reason (budget, score threshold, natural gap) and document it.</p>
+
+<h3>Can I use this for my own town?</h3>
+<p>Yes. You need five layers — buildings, schools, roads, rivers and an urban area — in any CRS, plus your own rules. Phase 0 finds the local UTM zone and reprojects everything. Map your layer and field names in <code>config.json</code>, then run the demo.</p>
+
+<h3>Is this an AI model?</h3>
+<p>No. The analysis is deterministic PyQGIS: buffers, overlays, distances, weighted linear combination and AHP. The “QGIS + AI” series covers AI-assisted workflows separately. No machine-learning model makes the decision.</p>
+
+<h3>What about rasters?</h3>
+<p>That is the next video: the same site-selection logic with a population raster and a DEM. The vector workflow here is the foundation; the raster version adds continuous surfaces and a different set of constraints.</p>
+
+<h2>The method is not the analysis</h2>
+
+<p>Boolean screening and MCE are both defensible. The difference is what they make visible. Boolean makes the rule visible. MCE makes the trade-off visible. Neither makes the values disappear.</p>
+
+<p>The most useful output of this comparison is not the six consensus sites. It is the question the three MCE-only sites force: <strong>is 300 m from a river a regulation or a preference?</strong> Answer that, and the method follows.</p>
+
+<div class="callout callout--cta">
+  <p><strong>Watch the full session</strong></p>
+  <p>The 61-minute video walks through the slides, the AHP matrix, the PyQGIS pipeline, the dashboard and the criteria matrix. Jump straight to a section:</p>
+  <ul class="chapters">
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=256">04:16</a> MCE and AHP in plain language</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=804">13:24</a> Constraints vs factors</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=1062">17:42</a> AHP pairwise comparisons</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=1488">24:48</a> The consistency ratio</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=1752">29:12</a> Sensitivity check</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=1778">29:38</a> Boolean vs MCE: 6 / 3 / 3</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=2382">39:42</a> Running the PyQGIS pipeline</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=3243">54:03</a> Dashboard: Boolean vs MCE</li>
+    <li><a href="https://youtu.be/OkVrB1ngHrk?t=3600">60:00</a> AHP Excel template</li>
+  </ul>
+  <p><a href="https://youtu.be/OkVrB1ngHrk">▶ QGIS + AI: Automated Site Selection v2 — Boolean vs MCE (AHP)</a></p>
+  <p><a href="https://www.youtube.com/watch?v=khPESqTPLMU">Part 1: Boolean screening, automated</a> · <a href="https://saltco.org">More free GIS training at saltco.org</a></p>
+</div>
+
+<p><em>Data: QGIS Training Manual exercise data (Swellendam, South Africa), © OpenStreetMap contributors, ODbL. Code: MIT licence. The analysis was run with QGIS 3.44.16; the scripts are also tested on QGIS 3.40 LTR.</em></p>
+
+<hr>
+
+<p><strong>About the author</strong><br>
+Sallah · SALTCO Training. I teach practical, open-source geospatial analysis and publish the code with every session, so you can reproduce the result and challenge it. More at <a href="https://saltco.org">saltco.org</a> and <a href="https://www.youtube.com/@saltcoTraining">YouTube @saltcoTraining</a>.</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <div class="social">
+        <a href="https://github.com/saltcotraining-geoai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@saltcoTraining" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> saltco. All content is open-source and free. MIT &amp; GPL.</p>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    if (toggle) toggle.addEventListener('click', () => links.classList.toggle('open'));
+</script>
+
+</body>
+</html>

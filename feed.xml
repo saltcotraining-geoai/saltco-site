@@ -5,7 +5,13 @@
     <link>https://saltco.org/</link>
     <description>Open-source geospatial AI education. Learn GIS, Python, and AI with tools that run offline.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 08 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Boolean vs MCE for Site Selection: What Changes When You Rank Sites?</title>
+      <link>https://saltco.org/blog-site-selection-v2-boolean-vs-weighted.html</link>
+      <description>QGIS + AI: Automated Site Selection, Part 2. The same 4,708 Swellendam buildings screened with yes/no rules and ranked with multi-criteria evaluation (AHP weights 0.60/0.20/0.20, CR 0.00, mean stability 0.98). The methods agree on 6 of 9 sites; the disagreement comes down to whether a 300 m river buffer is a regulation or a preference. Video, code and what-if table included.</description>
+      <pubDate>Fri, 27 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Applied Spatial Analysis Using QGIS - Capstone Briefing &amp; Final Session</title>
       <link>https://saltco.org/blog-week9-capstone-briefing-final-session.html</link>
